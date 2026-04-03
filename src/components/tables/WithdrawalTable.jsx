@@ -1,0 +1,348 @@
+"use client";
+
+import { useState, useMemo, useCallback } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import {
+  MoreHorizontal,
+  Eye,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from "lucide-react";
+import { useFetchData, useDelete, usePatch } from "@/hooks/useApi";
+import { useRouter } from "next/navigation";
+import Pagination from "@/components/Pagination";
+
+export default function WithdrawalTable({ searchTerm = "" }) {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [isProcessingId, setIsProcessingId] = useState(null);
+  const router = useRouter();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  const { data, isLoading, refetch, error } = useFetchData(
+    `/api/admin/withdrawals?page=${page}&limit=${limit}`,
+    ["withdrawals", page]
+  );
+
+  const deleteWithdrawal = useDelete(
+    (id) => `/api/admin/withdrawals/${id}`,
+    ["withdrawals", page],
+    {
+      onSuccess: () => {
+        // Check if we should go back a page after deletion
+        if (transactions.length === 1 && page > 1) {
+          setPage(page - 1); // Go to previous page
+        } else {
+          refetch(); // Refetch current page
+        }
+      },
+    }
+  );
+  
+  const patchWithdrawal = usePatch(
+    (id) => `/api/admin/withdrawals/${id}`,
+    ["withdrawals", page]
+  );
+
+  if (error)
+    return (
+      <div className="p-6 text-red-500 text-center">
+        Failed to load withdrawals.
+      </div>
+    );
+
+  const transactions = data?.data?.withdrawals || data?.data || [];
+  const meta = data?.meta || {};
+
+  const filteredData = useMemo(() => {
+    const list = !searchTerm.trim()
+      ? transactions
+      : transactions.filter((txn) =>
+          [txn.user?.fullName, txn._id, txn.user?._id]
+            .filter(Boolean)
+            .some((val) => val.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+
+    return list.sort(
+      (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt)
+    );
+  }, [transactions, searchTerm]);
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "successful":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "failed":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const handleDeleteClick = (transaction) => {
+    setTransactionToDelete(transaction);
+    setIsDeleteOpen(true);
+  };
+
+  const handleAccept = useCallback(
+    async (transaction) => {
+      try {
+        setIsProcessingId(transaction._id);
+
+        await patchWithdrawal.mutateAsync({
+          id: transaction._id,
+          data: { status: "successful" },
+        });
+        refetch();
+        setOpenMenuId(null);
+      } catch (error) {
+        console.error("Error approving transaction:", error);
+      } finally {
+        setIsProcessingId(null);
+      }
+    },
+    [patchWithdrawal, refetch]
+  );
+
+  const handleDecline = useCallback(
+    async (transaction) => {
+      try {
+        setIsProcessingId(transaction._id);
+        await patchWithdrawal.mutateAsync({
+          id: transaction._id,
+          data: { status: "failed" },
+        });
+        refetch();
+        setOpenMenuId(null);
+      } catch (error) {
+        console.error("Error declining transaction:", error);
+      } finally {
+        setIsProcessingId(null);
+      }
+    },
+    [patchWithdrawal, refetch]
+  );
+
+  const handleConfirmDelete = async () => {
+    if (!transactionToDelete?._id) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteWithdrawal.mutateAsync(transactionToDelete._id);
+      setIsDeleting(false);
+      setIsDeleteOpen(false);
+      setTransactionToDelete(null);
+    } catch (error) {
+      setIsDeleting(false);
+    }
+  };
+
+  const TableRowSkeleton = () => (
+    <TableRow>
+      {Array(7)
+        .fill(0)
+        .map((_, i) => (
+          <TableCell key={i}>
+            <div className="h-4 w-full max-w-[120px] bg-gray-200 rounded animate-pulse"></div>
+          </TableCell>
+        ))}
+    </TableRow>
+  );
+
+  return (
+    <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Withdrawal ID</TableHead>
+            <TableHead>User ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Crypto</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {isLoading ? (
+            Array(8)
+              .fill(0)
+              .map((_, idx) => <TableRowSkeleton key={idx} />)
+          ) : filteredData.length > 0 ? (
+            filteredData.map((txn) => {
+              const isApproved = txn.status?.toLowerCase() === "successful";
+              const isDeclined = txn.status?.toLowerCase() === "failed";
+              const isActionDisabled = isApproved || isDeclined;
+
+              return (
+                <TableRow key={txn._id}>
+                  <TableCell className="truncate max-w-[160px] font-medium">
+                    {txn._id || "N/A"}
+                  </TableCell>
+                  <TableCell className="truncate max-w-[160px] font-medium">
+                    {txn.user?._id || "N/A"}
+                  </TableCell>
+                  <TableCell>{txn.user?.fullName || "N/A"}</TableCell>
+                  <TableCell>₦{txn.amount?.toLocaleString()}</TableCell>
+                  <TableCell>{txn.crypto || "N/A"}</TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(txn.status)}>
+                      {txn.status || "N/A"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu
+                      open={openMenuId === txn._id}
+                      onOpenChange={(isOpen) =>
+                        setOpenMenuId(isOpen ? txn._id : null)
+                      }
+                    >
+                      <DropdownMenuTrigger asChild disabled={isDeleting}>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/admin/transactions/withdrawal/${txn._id}`
+                            )
+                          }
+                        >
+                          <Eye className="w-4 h-4 mr-2" /> View Details
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          className={`${
+                            isApproved
+                              ? "opacity-50 cursor-not-allowed"
+                              : "text-green-600 hover:text-green-700"
+                          }`}
+                          disabled={
+                            isActionDisabled ||
+                            patchWithdrawal.isLoading ||
+                            isProcessingId === txn._id
+                          }
+                          onClick={() => !isActionDisabled && handleAccept(txn)}
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" /> Approve
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          className={`${
+                            isDeclined
+                              ? "opacity-50 cursor-not-allowed"
+                              : "text-yellow-600 hover:text-yellow-700"
+                          }`}
+                          disabled={
+                            isActionDisabled ||
+                            patchWithdrawal.isLoading ||
+                            isProcessingId === txn._id
+                          }
+                          onClick={() =>
+                            !isActionDisabled && handleDecline(txn)
+                          }
+                        >
+                          <XCircle className="w-4 h-4 mr-2" /> Decline
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => handleDeleteClick(txn)}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8} className="text-center py-6 text-gray-500">
+                No withdrawals found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Pagination */}
+      <Pagination meta={meta} onPageChange={setPage} />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold">
+              {transactionToDelete?.user?.fullName || "this transaction"}
+            </span>
+            's transaction record? This action cannot be undone.
+          </p>
+          <DialogFooter className="mt-4">
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={handleConfirmDelete}
+              className="min-w-[140px] flex items-center justify-center gap-2"
+            >
+              {isDeleting ? "Deleting" : "Confirm Delete"}
+              {isDeleting && (
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

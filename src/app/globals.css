@@ -1,0 +1,239 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@theme inline {
+  /* --color-modal-background: var(--modal-background); */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-input-txt: var(--input-txt);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-popover-100: var(--popover-100);
+  --color-card-foreground: var(--card-foreground);
+  --color-premium-blue: var(--premium-blue);
+  --color-premium-lightblue: var(--premium-lightblue);
+  --color-premium-white: var(--premium-white);
+  --color-premiumheaderblack: var(--headerblack);
+  --color-premiumTertiary: var(--premiumTertiary);
+  --color-premiumSuccess-100: var(--premiumSuccess-100);
+  --color-premiumSuccess-200: var(--premiumSuccess-200);
+  --color-premiumgreen-100: var(--premiumgreen-100);
+  --color-premiumSecondaryBg: var(--premiumSecondaryBg);
+  --color-premiumStep-color: var(--premiumStep-color);
+  --color-premiumHr-line: var(--premiumHr-line);
+  --color-premiumOr-line: var(--premiumOr-line);
+  --color-premiumEye: var(--premiumEye);
+  --color-premiumFormBtn: var(--premiumFormBtn);
+  --color-kycPrimary: var(--kycPrimary);
+  --color-kycSecondary: var(--kycSecondary);
+  --color-kycSecondaryHover: var(--kycSecondaryHover);
+  --color-premiumTertiary-100: var(--premiumTertiary-100);
+  --color-kycTertiary: var(--kycTertiary);
+  --color-premiumGradient-100: var(--premiumGradient-100);
+  --color-premiumchart-10: var(--premiumchart-10);
+  --color-premiumchart-20: var(--premiumchart-20);
+  --color-premiumchart-300: var(--premiumchart-300);
+  --color-lightpurple-500: var(--lightpurple-500);
+  --color-lightGraypurple-100: var(--lightGraypurple-100);
+  --color-premiumpurple-400: var(--premiumpurple-400);
+  --color-premiumPrimaryColor-100: var(--premiumPrimaryColor-100);
+  --color-premiumUserBorder: var(--premiumUserBorder);
+  --color-premiumSuccessStatus-200: var(--premiumSuccessStatus-200);
+  --color-premiumPendingStatus-200: var(--premiumPendingStatus-200);
+  --color-premiumFailedStatus-200: var(--premiumFailedStatus-200);
+  --color-premiumNewArrival: var(--premiumNewArrival);
+  --color-premiumEarn: var(--premiumEarn);
+  --color-premiumInputSettings: var(--premiumInputSettings);
+  --color-premiumInputIcon: var(--premiumInputIcon);
+  --color-premiumHowItWorks: var(--premiumHowItWorks);
+  --color-premiumHowItWork--200: var(--premiumHowItWork--200);
+  --color-premiumHowItWork--400: var(--premiumHowItWork--400);
+  --color-premiumAdmin-card: var(--premiumAdmin-card);
+  --color-avarage--400: var(--avarage--400);
+  --color-premiumyellow-100: var(--premiumyellow-100);
+  --color-premiumyellow-200: var(--premiumyellow-200);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* --background: oklch(95.591% 0.00105 11.459); */
+:root {
+  --background: hsl(0 0% 100%);
+    /* --background: hsl(0 0% 100%; */
+
+  --radius: 0.625rem;
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+    --popover: hsl(0 0% 100%); /* white background */
+  --popover-foreground: hsl(0 0% 3.9%); /* almost black text */
+  --primary: hsla(244, 65%, 45%, 1);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+    --muted: hsl(0 0% 96.1%);
+    --muted-foreground: hsl(0 0% 45.1%);
+  --accent: hsl(0 0% 96.1%);
+    --accent-foreground: hsl(0 0% 9%);
+ 
+   --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 98%);
+
+  --border: oklch(0.922 0 0);
+  --input: rgba(130, 128, 255, 0.199);
+  --input-txt: hsla(241, 100%, 75%, 1);
+  --chart-1: hsla(0, 0%, 93%, 1);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+
+  --premiumSuccessStatus-200: hsla(171, 100%, 36%, 1);
+  --premiumPendingStatus-200: hsla(42, 97%, 58%, 1);
+  --premiumFailedStatus-200: hsla(0, 98%, 66%, 1);
+  --ring: hsla(221, 43%, 96%, 1);
+  --sidebar-border: hsla(0, 66%, 47%, 1);
+  --sidebar-ring: hsla(0, 100%, 98%, 1);
+  --popover-100: rgba(119, 225, 172, 0.178);
+  --chart-3: rgb(252, 255, 250);
+  --chart-5: hsla(273, 100%, 98%, 1);
+  --premium-blue: hsla(244, 65%, 45%, 1);
+  --premium-lightblue: rgb(63, 51, 231);
+  --premium-white: hsla(0, 0%, 100%, 1);
+  --headerblack: hsla(0, 0%, 5%, 1);
+  --premiumTertiary: hsla(218, 18%, 43%, 1);
+  --premiumSuccess-100: hsla(81, 76%, 40%, 1);
+  --premiumgreen-100: hsla(154, 100%, 40%, 1);
+  --premiumSuccess-200: rgb(78, 112, 15);
+  --premiumSecondaryBg: hsla(222, 100%, 98%, 1);
+  --premiumStep-color: hsla(248, 13%, 43%, 1);
+  --premiumHr-line: hsla(255, 97%, 87%, 1);
+  --premiumOr-line: hsla(0, 0%, 85%, 1);
+  --premiumEye: hsla(0, 0%, 60%, 1);
+  --premiumFormBtn: hsla(0, 0%, 42%, 1);
+  --kycPrimary: hsla(18, 100%, 97%, 1);
+  --kycSecondary: hsla(28, 92%, 53%, 1);
+  --kycSecondaryHover: rgb(197, 107, 29);
+  --kycTertiary: rgba(255, 227, 219, 0.683);
+  --premiumTertiary-100: hsla(231, 100%, 97%, 1);
+  --premiumGradient-100: hsla(244, 88%, 96%, 1);
+  --premiumchart-10: hsla(44, 100%, 96%, 1);
+  --premiumchart-20: hsla(126, 100%, 96%, 1);
+  --premiumchart-300: hsla(88, 50%, 53%, 1);
+  --premiumpurple-400: hsla(270, 92%, 66%, 1);
+  --lightpurple-500: hsla(284, 100%, 96%, 1);
+  --lightGraypurple-100: hsla(244, 100%, 96%, 1);
+  --premiumPrimaryColor-100: hsla(0, 0%, 90%, 1);
+  --premiumUserBorder: hsla(0, 0%, 96%, 1);
+  --premiumNewArrival: hsla(60, 42%, 46%, 1);
+  --premiumEarn: hsla(122, 84%, 31%, 1);
+  --premiumInputSettings: hsla(230, 42%, 96%, 0.6);
+  --premiumInputIcon: hsla(202, 4%, 39%, 1);
+  --premiumHowItWorks: hsla(0, 0%, 74%, 1);
+  --premiumHowItWork--200: hsla(244, 100%, 99%, 1);
+  --premiumHowItWork--400: hsla(231, 44%, 94%, 1);
+  --avarage--400: hsla(231, 99%, 59%, 1);
+  --premiumAdmin-card: hsla(210, 6%, 13%, 1);
+  --premiumyellow-100: hsla(42, 99%, 62%, 1);
+  --premiumyellow-200: rgba(254, 196, 62, 0.128);
+}
+
+.dark {
+  /* --background: hsl(0 0% 10%); */
+    --background: hsl(0 0% 3.9%);
+   --muted: hsl(0 0% 14.9%);
+    --muted-foreground: hsl(0 0% 63.9%);
+ --accent: hsl(0 0% 14.9%);
+    --accent-foreground: hsl(0 0% 98%);
+      --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 98%);
+
+  /* --modal-background: hsl(0 0% 10%); */
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+ --popover: hsl(0 0% 3.9%);
+    --popover-foreground: hsl(0 0% 98%);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+    
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
