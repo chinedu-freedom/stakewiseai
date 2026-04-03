@@ -64,7 +64,7 @@ const cryptoPlanSchema = z.object({
   statusLabel: z.enum(["active", "inactive", "completed"]),
 });
 
-export function CryptoPlanDialog() {
+export function PlanDialog() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);

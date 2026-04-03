@@ -1,18 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import Tabs from "@/components/ui/tabs";
-import { SearchBar } from "@/components/ui/search-bar";
-import { Pagination } from "@/components/ui/pagination";
-import AllUsersTable from "@/components/tables/UsersTable";
-import KycVerificationTable from "@/components/tables/KycVerificationTable";
 import { useState } from "react";
+import { SearchBar } from "@/components/ui/search-bar";
+import UsersTable from "@/components/tables/UsersTable";
 
 export default function UserManagementPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const searchParams = useSearchParams();
-  const tab = searchParams.get("tab") || "all-users";
-  const tabs = ["All Users", "KYC/Verification"];
 
   return (
     <div className="p-6 space-y-4">
@@ -27,15 +20,9 @@ export default function UserManagementPage() {
         </div>
       </div>
 
-      <Tabs tabs={tabs} defaultTab="all-users" />
-
-      {tab === "kyc-verification" ? (
-        <KycVerificationTable searchTerm={searchTerm} />
-      ) : (
-        <AllUsersTable searchTerm={searchTerm} />
-      )}
-
-      <Pagination current={1} total={78} />
+      <div className="mt-4">
+        <UsersTable searchTerm={searchTerm} />
+      </div>
     </div>
   );
 }
