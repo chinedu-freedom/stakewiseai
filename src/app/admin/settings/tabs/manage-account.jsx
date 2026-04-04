@@ -18,7 +18,7 @@ export default function ManageAccount() {
   );
 
   const [form, setForm] = useState({
-    userName: "",
+    username: "",
     email: "",
     dateOfBirth: "",
     city: "",
@@ -32,7 +32,7 @@ export default function ManageAccount() {
   useEffect(() => {
     if (data?.success) {
       setForm({
-        userName: data.data.userName || "",
+        username: data.data.username || "",
         email: data.data.email || "",
         dateOfBirth: data.data.dateOfBirth
           ? new Date(data.data.dateOfBirth).toISOString().substring(0, 10)
@@ -86,8 +86,8 @@ export default function ManageAccount() {
               alt="Profile photo"
             />
             <AvatarFallback>
-              {form.userName
-                ? form.userName
+              {form.username
+                ? form.username
                     .split(" ")
                     .map((n) => n[0])
                     .join("")
@@ -119,8 +119,8 @@ export default function ManageAccount() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             placeholder="Full name"
-            name="userName"
-            value={form.userName}
+            name="username"
+            value={form.username}
             disabled
           />
           <Input

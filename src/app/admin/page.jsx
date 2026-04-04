@@ -18,28 +18,24 @@ export default function DashboardPage() {
   {
     title: "Total Users",
     value: data?.data.totals.users ?? 0,
-    delta: 8.5,
     icon: Users,
     color: "green",
   },
   {
     title: "Total Investments",
     value: formatCurrency(Number(data?.data.totals.investments ?? 0)),
-    delta: -4.3,
     icon: Briefcase,
     color: "red",
   },
   {
     title: "Total Deposit",
     value: formatCurrency(Number(data?.data.totals.deposits ?? 0)),
-    delta: 1.3,
     icon: DollarSign,
     color: "yellow",
   },
   {
     title: "Total Withdrawal",
     value: formatCurrency(Number(data?.data.totals.withdrawals ?? 0)),
-    delta: 1.8,
     icon: ArrowDownRight,
     color: "blue",
   },

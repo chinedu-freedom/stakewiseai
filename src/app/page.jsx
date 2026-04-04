@@ -33,16 +33,16 @@ export default function LoginPage() {
   });
 
   // ✅ updated submit handler
- const onSubmit = (data) => {
-  loginMutation.mutate(data, {
-    onSuccess: () => {
-      router.push("/admin");
-    },
-    onError: (error) => {
-      console.error("Login failed:", error);
-    },
-  });
-};
+  const onSubmit = (data) => {
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        router.push("/admin");
+      },
+      onError: (error) => {
+        console.error("Login failed:", error);
+      },
+    });
+  };
 
   const isLoading = loginMutation.isPending;
 
@@ -100,7 +100,16 @@ export default function LoginPage() {
               className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-md py-3 font-medium transition-all"
               disabled={isLoading}
             >
-              {isLoading ? "Logging in..." : "Login"}
+              {isLoading ? <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <rect width="10" height="10" x="1" y="1" fill="currentColor" rx="1">
+                    <animate attributeName="x" dur="0.2s" values="1;13" repeatCount="indefinite" />
+                  </rect>
+                </svg> : "Login"}
             </Button>
           </form>
 
@@ -132,3 +141,14 @@ export default function LoginPage() {
     </div>
   );
 }
+
+//  <svg
+//                   xmlns="http://www.w3.org/2000/svg"
+//                   width="24"
+//                   height="24"
+//                   viewBox="0 0 24 24"
+//                 >
+//                   <rect width="10" height="10" x="1" y="1" fill="currentColor" rx="1">
+//                     <animate attributeName="x" dur="0.2s" values="1;13" repeatCount="indefinite" />
+//                   </rect>
+//                 </svg>

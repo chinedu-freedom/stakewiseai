@@ -34,18 +34,12 @@ export default function SignupPage() {
 
   const onSubmit = (data) => {
     const payload = {
-      username: data.username, // ✅ FIXED (was userName)
+      username: data.username, // ✅ FIXED (was username)
       email: data.email,
       phoneNumber: data.phoneNumber,
       password: data.password,
       adminSecret: data.adminSecret || undefined,
     };
-
-    signupMutation.mutate(payload, {
-      onSuccess: () => {
-        router.push("/?verified=true");
-      },
-    });
   };
 
   return (
@@ -63,7 +57,7 @@ export default function SignupPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Username */}
+            {/* username */}
             <div>
               <Input label="Username" {...register("username")} />
               {errors.username && (

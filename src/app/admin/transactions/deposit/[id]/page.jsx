@@ -217,7 +217,7 @@ export default function DepositDetailsPage() {
                 <KeyValueList
                   data={{
                     "User ID": deposit.user?._id,
-                    "Full Name": deposit.user?.userName,
+                    "Full Name": deposit.user?.username,
                     Email: deposit.user?.email,
                     "Phone Number": deposit.user?.phoneNumber || "—",
                     "Account Status": (

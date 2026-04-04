@@ -74,8 +74,8 @@ export default function Topbar({ isOpen, onToggle }) {
                     alt="Profile photo"
                   />
                   <AvatarFallback>
-                    {admin?.data?.userName
-                      ? admin?.data?.userName
+                    {admin?.data?.username
+                      ? admin?.data?.username
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
@@ -91,7 +91,7 @@ export default function Topbar({ isOpen, onToggle }) {
                 {isLoading ? (
                   <div className="w-20 h-3 bg-gray-200 rounded animate-pulse" />
                 ) : (
-                  admin?.data?.userName || "Unknown"
+                  admin?.data?.username || "Unknown"
                 )}
               </div>
               <div className="text-xs text-gray-400">

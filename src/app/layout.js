@@ -1,6 +1,6 @@
 import "./globals.css";
 import ConfigLayout from "./config-layout";
-import Providers from "./providers";
+// import Providers from "./providers";
 
 
 export const metadata = {
@@ -11,9 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Providers>
+        {/* <Providers> */}
         <ConfigLayout>{children}</ConfigLayout>
-        </Providers>
+        {/* </Providers> */}
       </body>
     </html>
   );
