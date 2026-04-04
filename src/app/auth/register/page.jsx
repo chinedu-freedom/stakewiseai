@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/lib/schemas";
-import { usePost } from "@/hooks/useApi"; 
+import { usePost } from "@/hooks/useApi";
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -20,7 +20,7 @@ export default function SignupPage() {
   } = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      userName: "",
+      username: "",
       email: "",
       phoneNumber: "",
       password: "",
@@ -29,11 +29,12 @@ export default function SignupPage() {
     },
   });
 
-  const signupMutation = usePost("/api/admin/auth/sign-up", null); // no queryKey needed
+  // ✅ correct endpoint (matches backend)
+  const signupMutation = usePost("/api/admin/auth/sign-up");
 
   const onSubmit = (data) => {
     const payload = {
-      userName: data.userName,
+      username: data.username, // ✅ FIXED (was userName)
       email: data.email,
       phoneNumber: data.phoneNumber,
       password: data.password,
@@ -41,8 +42,8 @@ export default function SignupPage() {
     };
 
     signupMutation.mutate(payload, {
-      onSuccess: (res) => {
-        router.push("/"); // redirect after successful signup
+      onSuccess: () => {
+        router.push("/?verified=true");
       },
     });
   };
@@ -53,19 +54,21 @@ export default function SignupPage() {
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="mb-10">
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Sign up</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">
+              Sign up
+            </h1>
             <p className="text-gray-500 text-sm">
               Sign up for free and start growing your wealth today
             </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Full Name */}
+            {/* Username */}
             <div>
-              <Input label="User Name" {...register("userName")} />
-              {errors.userName && (
+              <Input label="Username" {...register("username")} />
+              {errors.username && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.userName.message}
+                  {errors.username.message}
                 </p>
               )}
             </div>
@@ -80,7 +83,7 @@ export default function SignupPage() {
               )}
             </div>
 
-            {/* Phone Number */}
+            {/* Phone */}
             <div>
               <Input
                 label="Phone Number"
@@ -136,7 +139,7 @@ export default function SignupPage() {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-md py-3 font-medium transition-all"
@@ -146,7 +149,6 @@ export default function SignupPage() {
             </Button>
           </form>
 
-          {/* Already have an account */}
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{" "}
             <Link
@@ -159,7 +161,7 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* Right section */}
+      {/* Right */}
       <div className="hidden md:flex w-1/2 items-center justify-center">
         <div className="w-[70%] h-[75%] overflow-hidden rounded-2xl shadow-md">
           <Image
