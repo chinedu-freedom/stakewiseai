@@ -44,7 +44,7 @@ const dummyDeposits = [
     _id: "DEP-001",
     user: {
       _id: "USR-001",
-      fullName: "John Doe"
+      userName: "John Doe"
     },
     amount: 5000,
     crypto: "Bitcoin (BTC)",
@@ -58,7 +58,7 @@ const dummyDeposits = [
     _id: "DEP-002",
     user: {
       _id: "USR-002",
-      fullName: "Jane Smith"
+      userName: "Jane Smith"
     },
     amount: 15000,
     crypto: "Ethereum (ETH)",
@@ -72,7 +72,7 @@ const dummyDeposits = [
     _id: "DEP-003",
     user: {
       _id: "USR-003",
-      fullName: "Robert Johnson"
+      userName: "Robert Johnson"
     },
     amount: 2500,
     crypto: "Bitcoin (BTC)",
@@ -86,7 +86,7 @@ const dummyDeposits = [
     _id: "DEP-004",
     user: {
       _id: "USR-004",
-      fullName: "Emily Brown"
+      userName: "Emily Brown"
     },
     amount: 7500,
     crypto: "USDT (TRC20)",
@@ -100,7 +100,7 @@ const dummyDeposits = [
     _id: "DEP-005",
     user: {
       _id: "USR-005",
-      fullName: "Michael Wilson"
+      userName: "Michael Wilson"
     },
     amount: 12000,
     crypto: "Ethereum (ETH)",
@@ -114,7 +114,7 @@ const dummyDeposits = [
     _id: "DEP-006",
     user: {
       _id: "USR-006",
-      fullName: "Sarah Davis"
+      userName: "Sarah Davis"
     },
     amount: 3000,
     crypto: "Bitcoin (BTC)",
@@ -128,7 +128,7 @@ const dummyDeposits = [
     _id: "DEP-007",
     user: {
       _id: "USR-007",
-      fullName: "David Martinez"
+      userName: "David Martinez"
     },
     amount: 20000,
     crypto: "USDT (ERC20)",
@@ -142,7 +142,7 @@ const dummyDeposits = [
     _id: "DEP-008",
     user: {
       _id: "USR-008",
-      fullName: "Lisa Anderson"
+      userName: "Lisa Anderson"
     },
     amount: 4500,
     crypto: "Ethereum (ETH)",
@@ -156,7 +156,7 @@ const dummyDeposits = [
     _id: "DEP-009",
     user: {
       _id: "USR-009",
-      fullName: "James Taylor"
+      userName: "James Taylor"
     },
     amount: 8500,
     crypto: "Bitcoin (BTC)",
@@ -170,7 +170,7 @@ const dummyDeposits = [
     _id: "DEP-010",
     user: {
       _id: "USR-010",
-      fullName: "Maria Garcia"
+      userName: "Maria Garcia"
     },
     amount: 3500,
     crypto: "USDT (TRC20)",
@@ -184,7 +184,7 @@ const dummyDeposits = [
     _id: "DEP-011",
     user: {
       _id: "USR-011",
-      fullName: "Thomas Lee"
+      userName: "Thomas Lee"
     },
     amount: 18000,
     crypto: "Ethereum (ETH)",
@@ -198,7 +198,7 @@ const dummyDeposits = [
     _id: "DEP-012",
     user: {
       _id: "USR-012",
-      fullName: "Patricia White"
+      userName: "Patricia White"
     },
     amount: 6200,
     crypto: "Bitcoin (BTC)",
@@ -235,7 +235,7 @@ export default function DepositTable({ searchTerm = "" }) {
       ? deposits
       : deposits.filter((dep) =>
           [
-            dep.user?.fullName,
+            dep.user?.userName,
             dep._id,
             dep.user?._id,
             dep.crypto,
@@ -402,7 +402,7 @@ export default function DepositTable({ searchTerm = "" }) {
                   <TableCell className="truncate max-w-[160px] font-medium">
                     {dep.user?._id || "N/A"}
                   </TableCell>
-                  <TableCell>{dep.user?.fullName || "N/A"}</TableCell>
+                  <TableCell>{dep.user?.userName || "N/A"}</TableCell>
                   <TableCell>{formatCurrency(dep.amount)}</TableCell>
                   <TableCell>{dep.crypto || dep.currency || "N/A"}</TableCell>
                   <TableCell>
@@ -502,7 +502,7 @@ export default function DepositTable({ searchTerm = "" }) {
           <p className="text-sm text-gray-600">
             Are you sure you want to delete{" "}
             <span className="font-semibold">
-              {depositToDelete?.user?.fullName || "this transaction"}
+              {depositToDelete?.user?.userName || "this transaction"}
             </span>
             's transaction record? This action cannot be undone.
           </p>
@@ -614,7 +614,7 @@ export default function DepositTable({ searchTerm = "" }) {
 //     ? deposits
 //     : deposits.filter((dep) =>
 //         [
-//           dep.user?.fullName,
+//           dep.user?.userName,
 //           dep._id,
 //           dep.user?._id,
 //           dep.crypto,
@@ -766,7 +766,7 @@ export default function DepositTable({ searchTerm = "" }) {
 //                   <TableCell className="truncate max-w-[160px] font-medium">
 //                     {dep.user?._id || "N/A"}
 //                   </TableCell>
-//                   <TableCell>{dep.user?.fullName || "N/A"}</TableCell>
+//                   <TableCell>{dep.user?.userName || "N/A"}</TableCell>
 //                   <TableCell>{formatCurrency(dep.amount)}</TableCell>
 //                   <TableCell>{dep.crypto || dep.currency || "N/A"}</TableCell>
 //                   <TableCell>
@@ -863,7 +863,7 @@ export default function DepositTable({ searchTerm = "" }) {
 //           <p className="text-sm text-gray-600">
 //             Are you sure you want to delete{" "}
 //             <span className="font-semibold">
-//               {depositToDelete?.user?.fullName || "this transaction"}
+//               {depositToDelete?.user?.userName || "this transaction"}
 //             </span>
 //             's transaction record? This action cannot be undone.
 //           </p>

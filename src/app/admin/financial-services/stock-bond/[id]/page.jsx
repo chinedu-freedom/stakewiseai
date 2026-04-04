@@ -261,7 +261,7 @@ export default function StocksBondsInvestmentDetailsPage() {
                 <KeyValueList
                   data={{
                     "User ID": investment.user?._id,
-                    "Full Name": investment.user?.fullName,
+                    "Full Name": investment.user?.userName,
                     "Email": investment.user?.email,
                     "Phone Number": investment.user?.phoneNumber || "N/A",
                     "Account Status": (

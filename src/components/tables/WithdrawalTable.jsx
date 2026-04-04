@@ -44,7 +44,7 @@ const dummyWithdrawals = [
     _id: "WTD-001",
     user: {
       _id: "USR-001",
-      fullName: "John Doe"
+      userName: "John Doe"
     },
     amount: 2500,
     crypto: "Bitcoin (BTC)",
@@ -56,7 +56,7 @@ const dummyWithdrawals = [
     _id: "WTD-002",
     user: {
       _id: "USR-002",
-      fullName: "Jane Smith"
+      userName: "Jane Smith"
     },
     amount: 5000,
     crypto: "Ethereum (ETH)",
@@ -68,7 +68,7 @@ const dummyWithdrawals = [
     _id: "WTD-003",
     user: {
       _id: "USR-003",
-      fullName: "Robert Johnson"
+      userName: "Robert Johnson"
     },
     amount: 1200,
     crypto: "USDT (TRC20)",
@@ -80,7 +80,7 @@ const dummyWithdrawals = [
     _id: "WTD-004",
     user: {
       _id: "USR-004",
-      fullName: "Emily Brown"
+      userName: "Emily Brown"
     },
     amount: 3500,
     crypto: "Bitcoin (BTC)",
@@ -92,7 +92,7 @@ const dummyWithdrawals = [
     _id: "WTD-005",
     user: {
       _id: "USR-005",
-      fullName: "Michael Wilson"
+      userName: "Michael Wilson"
     },
     amount: 8000,
     crypto: "Ethereum (ETH)",
@@ -104,7 +104,7 @@ const dummyWithdrawals = [
     _id: "WTD-006",
     user: {
       _id: "USR-006",
-      fullName: "Sarah Davis"
+      userName: "Sarah Davis"
     },
     amount: 1500,
     crypto: "USDT (ERC20)",
@@ -116,7 +116,7 @@ const dummyWithdrawals = [
     _id: "WTD-007",
     user: {
       _id: "USR-007",
-      fullName: "David Martinez"
+      userName: "David Martinez"
     },
     amount: 10000,
     crypto: "Bitcoin (BTC)",
@@ -128,7 +128,7 @@ const dummyWithdrawals = [
     _id: "WTD-008",
     user: {
       _id: "USR-008",
-      fullName: "Lisa Anderson"
+      userName: "Lisa Anderson"
     },
     amount: 2200,
     crypto: "Ethereum (ETH)",
@@ -140,7 +140,7 @@ const dummyWithdrawals = [
     _id: "WTD-009",
     user: {
       _id: "USR-009",
-      fullName: "James Taylor"
+      userName: "James Taylor"
     },
     amount: 4200,
     crypto: "USDT (TRC20)",
@@ -152,7 +152,7 @@ const dummyWithdrawals = [
     _id: "WTD-010",
     user: {
       _id: "USR-010",
-      fullName: "Maria Garcia"
+      userName: "Maria Garcia"
     },
     amount: 1750,
     crypto: "Bitcoin (BTC)",
@@ -164,7 +164,7 @@ const dummyWithdrawals = [
     _id: "WTD-011",
     user: {
       _id: "USR-011",
-      fullName: "Thomas Lee"
+      userName: "Thomas Lee"
     },
     amount: 6200,
     crypto: "Ethereum (ETH)",
@@ -176,7 +176,7 @@ const dummyWithdrawals = [
     _id: "WTD-012",
     user: {
       _id: "USR-012",
-      fullName: "Patricia White"
+      userName: "Patricia White"
     },
     amount: 3100,
     crypto: "USDT (ERC20)",
@@ -210,7 +210,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
     const list = !searchTerm.trim()
       ? withdrawals
       : withdrawals.filter((txn) =>
-          [txn.user?.fullName, txn._id, txn.user?._id]
+          [txn.user?.userName, txn._id, txn.user?._id]
             .filter(Boolean)
             .some((val) => val.toLowerCase().includes(searchTerm.toLowerCase()))
         );
@@ -360,7 +360,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
                   <TableCell className="truncate max-w-[160px] font-medium">
                     {txn.user?._id || "N/A"}
                   </TableCell>
-                  <TableCell>{txn.user?.fullName || "N/A"}</TableCell>
+                  <TableCell>{txn.user?.userName || "N/A"}</TableCell>
                   <TableCell>₦{txn.amount?.toLocaleString()}</TableCell>
                   <TableCell>{txn.crypto || "N/A"}</TableCell>
                   <TableCell>
@@ -469,7 +469,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
           <p className="text-sm text-gray-600">
             Are you sure you want to delete{" "}
             <span className="font-semibold">
-              {transactionToDelete?.user?.fullName || "this transaction"}
+              {transactionToDelete?.user?.userName || "this transaction"}
             </span>
             's transaction record? This action cannot be undone.
           </p>
@@ -586,7 +586,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
 //     const list = !searchTerm.trim()
 //       ? transactions
 //       : transactions.filter((txn) =>
-//           [txn.user?.fullName, txn._id, txn.user?._id]
+//           [txn.user?.userName, txn._id, txn.user?._id]
 //             .filter(Boolean)
 //             .some((val) => val.toLowerCase().includes(searchTerm.toLowerCase()))
 //         );
@@ -713,7 +713,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
 //                   <TableCell className="truncate max-w-[160px] font-medium">
 //                     {txn.user?._id || "N/A"}
 //                   </TableCell>
-//                   <TableCell>{txn.user?.fullName || "N/A"}</TableCell>
+//                   <TableCell>{txn.user?.userName || "N/A"}</TableCell>
 //                   <TableCell>₦{txn.amount?.toLocaleString()}</TableCell>
 //                   <TableCell>{txn.crypto || "N/A"}</TableCell>
 //                   <TableCell>
@@ -819,7 +819,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
 //           <p className="text-sm text-gray-600">
 //             Are you sure you want to delete{" "}
 //             <span className="font-semibold">
-//               {transactionToDelete?.user?.fullName || "this transaction"}
+//               {transactionToDelete?.user?.userName || "this transaction"}
 //             </span>
 //             's transaction record? This action cannot be undone.
 //           </p>

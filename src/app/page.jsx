@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-// import { signIn } from "next-auth/react";
-// import { AUTH_ERROR_MESSAGES } from "@/lib/authErrors";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,24 +34,24 @@ export default function LoginPage() {
     },
   });
 
-  // const onSubmit = async (data) => {
-  //   setIsLoading(true);
+  const onSubmit = async (data) => {
+    setIsLoading(true);
 
-  //   const result = await signIn("credentials", {
-  //     email: data.email,
-  //     password: data.password,
-  //     redirect: false,
-  //   });
+    const result = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-  //   setIsLoading(false);
+    setIsLoading(false);
 
-  //   if (result?.error) {
-  //     router.push(`/?error=${result.error}`);
-  //     return;
-  //   }
+    if (result?.error) {
+      router.push(`/?error=${result.error}`);
+      return;
+    }
 
-  //   router.push("/admin");
-  // };
+    router.push("/admin");
+  };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white">
@@ -67,19 +65,6 @@ export default function LoginPage() {
               Login to your account to continue
             </p>
           </div>
-
-          {verified && (
-            <div className="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-700">
-              Your admin account has been activated successfully. Please log in.
-            </div>
-          )}
-
-          {errorMessage && (
-            <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
-              {errorMessage}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
               <Input label="Email" type="email" {...register("email")} />
@@ -133,36 +118,14 @@ export default function LoginPage() {
               )}
             </Button>
 
-            <div className="flex items-center gap-2 my-4">
-              <div className="flex-1 h-px bg-gray-300" />
-              <span className="text-sm text-gray-400">or</span>
-              <div className="flex-1 h-px bg-gray-300" />
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                signIn("google", {
-                  callbackUrl: "/admin",
-                })
-              }
-              className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2.5 hover:bg-gray-50 transition-all"
-            >
-              <Image
-                src="/assets/google.png"
-                alt="Google"
-                width={18}
-                height={18}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Continue with Google
-              </span>
-            </button>
+           
           </form>
-<p className="text-center text-sm text-gray-500 mt-6">
-  Access is by invitation only. Please contact an administrator.
-</p>
+  <p className="text-center text-sm text-gray-500 mt-6">
+            Don't have an account?{" "}
+            <Link href="/auth/register" className="text-blue-600 font-medium hover:underline">
+              Sign up
+            </Link>
+          </p>
 
         </div>
       </div>

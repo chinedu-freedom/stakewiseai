@@ -36,7 +36,7 @@ import Pagination from "@/components/Pagination";
 const dummyUsers = [
   {
     _id: "USR-001",
-    fullName: "John Doe",
+    userName: "John Doe",
     email: "john.doe@example.com",
     status: "approved",
     accountStatus: "active",
@@ -44,7 +44,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-002",
-    fullName: "Jane Smith",
+    userName: "Jane Smith",
     email: "jane.smith@example.com",
     status: "pending",
     accountStatus: "active",
@@ -52,7 +52,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-003",
-    fullName: "Robert Johnson",
+    userName: "Robert Johnson",
     email: "robert.johnson@example.com",
     status: "approved",
     accountStatus: "suspended",
@@ -60,7 +60,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-004",
-    fullName: "Emily Brown",
+    userName: "Emily Brown",
     email: "emily.brown@example.com",
     status: "rejected",
     accountStatus: "active",
@@ -68,7 +68,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-005",
-    fullName: "Michael Wilson",
+    userName: "Michael Wilson",
     email: "michael.wilson@example.com",
     status: "approved",
     accountStatus: "active",
@@ -76,7 +76,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-006",
-    fullName: "Sarah Davis",
+    userName: "Sarah Davis",
     email: "sarah.davis@example.com",
     status: "pending",
     accountStatus: "active",
@@ -84,7 +84,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-007",
-    fullName: "David Martinez",
+    userName: "David Martinez",
     email: "david.martinez@example.com",
     status: "approved",
     accountStatus: "suspended",
@@ -92,7 +92,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-008",
-    fullName: "Lisa Anderson",
+    userName: "Lisa Anderson",
     email: "lisa.anderson@example.com",
     status: "not submitted",
     accountStatus: "active",
@@ -100,7 +100,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-009",
-    fullName: "James Taylor",
+    userName: "James Taylor",
     email: "james.taylor@example.com",
     status: "approved",
     accountStatus: "active",
@@ -108,7 +108,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-010",
-    fullName: "Maria Garcia",
+    userName: "Maria Garcia",
     email: "maria.garcia@example.com",
     status: "pending",
     accountStatus: "active",
@@ -116,7 +116,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-011",
-    fullName: "Thomas Lee",
+    userName: "Thomas Lee",
     email: "thomas.lee@example.com",
     status: "approved",
     accountStatus: "active",
@@ -124,7 +124,7 @@ const dummyUsers = [
   },
   {
     _id: "USR-012",
-    fullName: "Patricia White",
+    userName: "Patricia White",
     email: "patricia.white@example.com",
     status: "rejected",
     accountStatus: "suspended",
@@ -212,7 +212,7 @@ export default function UsersTable({ searchTerm = "" }) {
       setUsers(prev => prev.filter(u => u._id !== userToDelete._id));
       
       // Check if we should go back a page after deletion
-      const filteredUsers = filterAndSortData(users, searchTerm, ["_id", "fullName", "email"]);
+      const filteredUsers = filterAndSortData(users, searchTerm, ["_id", "userName", "email"]);
       const remainingItems = filteredUsers.length - 1;
       const currentPageItems = (page - 1) * limit;
       if (remainingItems <= currentPageItems && page > 1) {
@@ -245,7 +245,7 @@ export default function UsersTable({ searchTerm = "" }) {
   const filteredUsers = useMemo(() => {
     return filterAndSortData(users, searchTerm, [
       "_id",
-      "fullName",
+      "userName",
       "email",
     ]);
   }, [users, searchTerm]);
@@ -303,7 +303,7 @@ export default function UsersTable({ searchTerm = "" }) {
                   <TableCell className="font-medium truncate max-w-[120px]">
                     {user._id}
                   </TableCell>
-                  <TableCell className="font-medium">{user.fullName}</TableCell>
+                  <TableCell className="font-medium">{user.userName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell className={getKycStatusColor(user.status)}>
                     {user.status}
@@ -398,7 +398,7 @@ export default function UsersTable({ searchTerm = "" }) {
           <p className="text-sm text-gray-600">
             Are you sure you want to delete{" "}
             <span className="font-semibold">
-              {userToDelete?.fullName || "this user"}
+              {userToDelete?.userName || "this user"}
             </span>
             's account record? This action cannot be undone.
           </p>
@@ -577,7 +577,7 @@ export default function UsersTable({ searchTerm = "" }) {
 //   const filteredUsers = useMemo(() => {
 //     return filterAndSortData(usersList, searchTerm, [
 //       "_id",
-//       "fullName",
+//       "userName",
 //       "email",
 //     ]);
 //   }, [usersList, searchTerm]);
@@ -628,7 +628,7 @@ export default function UsersTable({ searchTerm = "" }) {
 //                   <TableCell className="font-medium truncate max-w-[120px]">
 //                     {user._id}
 //                   </TableCell>
-//                   <TableCell className="font-medium">{user.fullName}</TableCell>
+//                   <TableCell className="font-medium">{user.userName}</TableCell>
 //                   <TableCell>{user.email}</TableCell>
 //                   <TableCell className={getKycStatusColor(user.status)}>
 //                     {user.status}
@@ -739,7 +739,7 @@ export default function UsersTable({ searchTerm = "" }) {
 //           <p className="text-sm text-gray-600">
 //             Are you sure you want to delete{" "}
 //             <span className="font-semibold">
-//               {userToDelete?.fullName || "this user"}
+//               {userToDelete?.userName || "this user"}
 //             </span>
 //             's account record? This action cannot be undone.
 //           </p>

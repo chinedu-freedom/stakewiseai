@@ -189,7 +189,7 @@ export default function UserDetailsPage() {
               <CardContent>
                 <KeyValueList
                   data={{
-                    "Full Name": user.fullName,
+                    "Full Name": user.userName,
                     Email: user.email,
                     "Phone Number": user.phoneNumber || "—",
                     "Email Verified": user.emailVerified ? (

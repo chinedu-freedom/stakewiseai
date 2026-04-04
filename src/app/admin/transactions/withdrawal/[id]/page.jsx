@@ -246,7 +246,7 @@ export default function WithdrawalDetailsPage() {
                 <KeyValueList
                   data={{
                     "User ID": withdrawal.user?._id,
-                    "Full Name": withdrawal.user?.fullName,
+                    "Full Name": withdrawal.user?.userName,
                     Email: withdrawal.user?.email,
                     "Phone Number": withdrawal.user?.phoneNumber || "—",
                     "Account Status": (

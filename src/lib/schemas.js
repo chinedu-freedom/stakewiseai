@@ -22,7 +22,7 @@ export const otpSchema = z.object({
 
 export const signupSchema = z
   .object({
-    fullName: z.string().min(3, "Full name must be at least 3 characters"),
+    userName: z.string().min(3, "User name must be at least 3 characters"),
     email: z.string().email("Invalid email address"),
       phoneNumber: z
       .string()

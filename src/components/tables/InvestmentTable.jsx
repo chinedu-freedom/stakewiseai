@@ -45,7 +45,7 @@ const dummyInvestments = [
     _id: "INV-001",
     user: {
       _id: "USR-001",
-      fullName: "John Doe"
+      userName: "John Doe"
     },
     plan: {
       title: "Silver Plan"
@@ -58,7 +58,7 @@ const dummyInvestments = [
     _id: "INV-002",
     user: {
       _id: "USR-002",
-      fullName: "Jane Smith"
+      userName: "Jane Smith"
     },
     plan: {
       title: "Gold Plan"
@@ -71,7 +71,7 @@ const dummyInvestments = [
     _id: "INV-003",
     user: {
       _id: "USR-003",
-      fullName: "Robert Johnson"
+      userName: "Robert Johnson"
     },
     plan: {
       title: "Platinum Plan"
@@ -84,7 +84,7 @@ const dummyInvestments = [
     _id: "INV-004",
     user: {
       _id: "USR-004",
-      fullName: "Emily Brown"
+      userName: "Emily Brown"
     },
     plan: {
       title: "Silver Plan"
@@ -97,7 +97,7 @@ const dummyInvestments = [
     _id: "INV-005",
     user: {
       _id: "USR-005",
-      fullName: "Michael Wilson"
+      userName: "Michael Wilson"
     },
     plan: {
       title: "Gold Plan"
@@ -110,7 +110,7 @@ const dummyInvestments = [
     _id: "INV-006",
     user: {
       _id: "USR-006",
-      fullName: "Sarah Davis"
+      userName: "Sarah Davis"
     },
     plan: {
       title: "Diamond Plan"
@@ -123,7 +123,7 @@ const dummyInvestments = [
     _id: "INV-007",
     user: {
       _id: "USR-007",
-      fullName: "David Martinez"
+      userName: "David Martinez"
     },
     plan: {
       title: "Platinum Plan"
@@ -136,7 +136,7 @@ const dummyInvestments = [
     _id: "INV-008",
     user: {
       _id: "USR-008",
-      fullName: "Lisa Anderson"
+      userName: "Lisa Anderson"
     },
     plan: {
       title: "Silver Plan"
@@ -170,7 +170,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
     return filterAndSortData(
       investments,
       searchTerm,
-      ["_id", "user._id", "user.fullName", "plan.title"],
+      ["_id", "user._id", "user.userName", "plan.title"],
       "createdAt",
       "desc"
     );
@@ -252,7 +252,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
                   {inv.user?._id || "N/A"}
                 </TableCell>
                 <TableCell className="font-medium">
-                  {inv.user?.fullName || "N/A"}
+                  {inv.user?.userName || "N/A"}
                 </TableCell>
                 <TableCell>
                   {inv.plan?.title || "N/A"}
@@ -340,7 +340,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
             <p className="text-sm text-gray-600">
               Are you sure you want to delete{" "}
               <span className="font-semibold">
-                {investmentToDelete?.user?.fullName || "this investment"}
+                {investmentToDelete?.user?.userName || "this investment"}
               </span>
               's investment record?
             </p>
@@ -459,7 +459,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
 //     return filterAndSortData(
 //       investments,
 //       searchTerm,
-//       ["_id", "user._id", "user.fullName", "plan.title"],
+//       ["_id", "user._id", "user.userName", "plan.title"],
 //       "createdAt",
 //       "desc"
 //     );
@@ -528,7 +528,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
 //                   {inv.user?._id || "N/A"}
 //                 </TableCell>
 //                 <TableCell className="font-medium">
-//                   {inv.user?.fullName || "N/A"}
+//                   {inv.user?.userName || "N/A"}
 //                 </TableCell>
 //                 <TableCell>
 //                   {inv.plan?.title || "N/A"}
@@ -616,7 +616,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
 //             <p className="text-sm text-gray-600">
 //               Are you sure you want to delete{" "}
 //               <span className="font-semibold">
-//                 {investmentToDelete?.user?.fullName || "this investment"}
+//                 {investmentToDelete?.user?.userName || "this investment"}
 //               </span>
 //               's investment record?
 //             </p>

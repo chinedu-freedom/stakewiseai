@@ -62,6 +62,7 @@ const cryptoPlanSchema = z.object({
       .positive("Contract duration must be a positive number")
   ),
   statusLabel: z.enum(["active", "inactive", "completed"]),
+  isFixedDeposit: z.enum(["yes", "no"]),
 });
 
 export function PlanDialog() {
@@ -86,10 +87,12 @@ export function PlanDialog() {
       dailyProfit: 8,
       contractDuration: 30,
       statusLabel: "active",
+      isFixedDeposit: "no",
     },
   });
 
   const status = watch("statusLabel");
+  const fixedDeposit = watch("isFixedDeposit");
 
   const createPlanMutation = usePost(
     "/api/admin/investments/crypto/plans", 
@@ -115,6 +118,7 @@ export function PlanDialog() {
         dailyProfit: data.dailyProfit,
         contractDuration: data.contractDuration,
         status: data.statusLabel,
+        isFixedDeposit: data.isFixedDeposit === "yes" ? true : false,
       },
       {
         onSuccess: () => {
@@ -262,6 +266,7 @@ export function PlanDialog() {
             <p className="text-xs text-gray-500">Minimum: 1 day</p>
           </div>
 
+
           <div className="space-y-1">
             <Label>Status *</Label>
             <Select onValueChange={(val) => setValue("statusLabel", val)} value={status}>
@@ -274,6 +279,22 @@ export function PlanDialog() {
               </SelectContent>
             </Select>
             {errors.statusLabel && <p className="text-red-500 text-sm">{errors.statusLabel.message}</p>}
+          </div>
+          
+          {/* Fixed Deposit Select */}
+          <div className="space-y-1">
+            <Label className="mt-1">Fixed Deposit *</Label>
+            <Select onValueChange={(val) => setValue("isFixedDeposit", val)} value={fixedDeposit}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.isFixedDeposit && <p className="text-red-500 text-sm">{errors.isFixedDeposit.message}</p>}
+            <p className="text-xs text-gray-500 mt-2 ml-1">Select Yes if this is a fixed deposit plan</p>
           </div>
         </form>
 
@@ -288,8 +309,8 @@ export function PlanDialog() {
           >
             {createPlanMutation.isPending ? 
               <>
-                Adding
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Adding
               </> : "Add plan"}
           </Button>
         </DialogFooter>

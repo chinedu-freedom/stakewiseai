@@ -21,10 +21,8 @@ export default function PlansManagementPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="mt-4">
+      <div className="-mt-3 flex items-center justify-end">
           <PlanDialog />
-        </div>
       </div>
 
       <div className="mt-4">
