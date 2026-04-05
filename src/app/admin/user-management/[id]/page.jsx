@@ -28,16 +28,21 @@ import {
   FileText,
   Loader2,
   Calendar,
+  Mail,
+  Phone,
+  CheckCircle,
+  XCircle,
+  Image as ImageIcon,
 } from "lucide-react";
 import { getStatusColor, formatCurrency } from "@/lib/tableHelpers";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useImageSrc } from "@/hooks/useImageSrc";
 
 const accountStatusOptions = [
   { value: "pending", label: "Pending", color: "text-yellow-600" },
   { value: "active", label: "Active", color: "text-green-600" },
   { value: "inactive", label: "Inactive", color: "text-gray-600" },
-  { value: "suspended", label: "Suspended", color: "text-red-600" },
-  { value: "deactivated", label: "Deactivated", color: "text-red-800" },
 ];
 
 export default function UserDetailsPage() {
@@ -46,14 +51,12 @@ export default function UserDetailsPage() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
 
-  const { data, isLoading } = useFetchData(
-    `/api/admin/users/${id}`,
-    `users/${id}`
-  );
+  const { data, isLoading } = useFetchData(`/api/users/${id}`, [`users`, id]);
   const user = data?.data;
+  const imageSrc = useImageSrc(user?.image, "/placeholder-user.jpg");
 
   // usePatch hook instead of manual fetch
-  const updateUser = usePatch((id) => `/api/admin/users/${id}`, `users/${id}`);
+  const updateUser = usePatch((id) => `/api/users/${id}`, [`users`, id]);
 
   // Pre-fill current values when user data loads
   useEffect(() => {
@@ -65,7 +68,6 @@ export default function UserDetailsPage() {
 
   const handleUpdateUser = async () => {
     if (!selectedStatus && !accountBalance) {
-      // Error handled by usePatch hook automatically
       return;
     }
 
@@ -74,8 +76,7 @@ export default function UserDetailsPage() {
     const balanceChanged =
       accountBalance !== (user.accountBalance?.toString() || "");
 
-    if (!statusChanged && !depositChanged) {
-      // Error handled by usePatch hook automatically
+    if (!statusChanged && !balanceChanged) {
       return;
     }
 
@@ -90,7 +91,6 @@ export default function UserDetailsPage() {
         data: updateData,
       });
     } catch (error) {
-      // Error toast is handled by usePatch hook automatically
       console.error("Update error:", error);
     }
   };
@@ -126,7 +126,7 @@ export default function UserDetailsPage() {
             The requested user could not be found.
           </p>
           <Button onClick={() => router.back()}>
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Go Back
           </Button>
         </div>
@@ -138,6 +138,9 @@ export default function UserDetailsPage() {
   const hasChanges =
     selectedStatus !== user.accountStatus ||
     accountBalance !== (user.accountBalance?.toString() || "");
+
+  // Check if user has an image
+  const hasImage = user?.image && Object.keys(user.image).length > 0;
 
   return (
     <div className="min-h-screen p-6">
@@ -152,7 +155,6 @@ export default function UserDetailsPage() {
             >
               <ArrowLeft className="w-4 h-4" />
               Back
-              {/* Back to Users */}
             </Button>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
@@ -175,11 +177,59 @@ export default function UserDetailsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Left Column - User Information */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Profile Image Card or Fallback */}
+            {hasImage ? (
+              <Card className="shadow-sm border-0 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative h-48 md:h-90">
+                    <Image
+                      src={imageSrc}
+                      alt={user.username || "User Avatar"}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                      <div className="p-6 text-white">
+                        <h3 className="text-xl font-bold">{user.username}</h3>
+                        <p className="text-sm opacity-90">
+                          User ID: {user._id}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="shadow-sm border-0 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative h-48 md:h-90 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <div className="text-center p-6">
+                      <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <User className="w-10 h-10 text-gray-500" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-700">
+                        {user.username || "User"}
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                        User ID: {user._id}
+                      </p>
+                      <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-gray-200/50 rounded-full">
+                        <ImageIcon className="w-4 h-4 text-gray-500" />
+                        <span className="text-xs text-gray-600">
+                          No profile image uploaded
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Personal Information */}
             <Card className="shadow-sm border-0">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                   Personal Information
                 </CardTitle>
                 <CardDescription>
@@ -189,50 +239,20 @@ export default function UserDetailsPage() {
               <CardContent>
                 <KeyValueList
                   data={{
-                    "Full Name": user.username,
-                    Email: user.email,
+                    "User ID": user._id,
+                    Username: user.username || "N/A",
+                    "Email": (
+                      <div className="flex items-center gap-2">
+                        {user.email}
+                        {user.emailVerified ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <XCircle className="w-4 h-4 text-red-600" />
+                        )}
+                      </div>
+                    ),
                     "Phone Number": user.phoneNumber || "—",
-                    "Email Verified": user.emailVerified ? (
-                      <Badge className="bg-green-100 text-green-800">
-                        Verified
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-gray-600">
-                        Not Verified
-                      </Badge>
-                    ),
-                    "Member Since": new Date(user._createdAt).toLocaleString(
-                      "en-GB",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: true,
-                      }
-                    ),
-                  }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                />
-              </CardContent>
-            </Card>
-
-            {/* Account Information */}
-            <Card className="shadow-sm border-0">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                  Account Information
-                </CardTitle>
-                <CardDescription>
-                  Current account status and financial details
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <KeyValueList
-                  data={{
+                    "Referral Code": user.referralCode || "N/A",
                     "Account Status": (
                       <Badge className={getStatusColor(user.accountStatus)}>
                         {user.accountStatus}
@@ -241,68 +261,29 @@ export default function UserDetailsPage() {
                     "Account Balance": user.accountBalance
                       ? formatCurrency(user.accountBalance)
                       : "₦0",
-                    "Last Updated": user._updatedAt
-                      ? new Date(user._updatedAt).toLocaleString("en-GB", {
+                    "Member Since": user.createdAt
+                      ? new Date(user.createdAt).toLocaleString("en-GB", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
                           hour: "2-digit",
                           minute: "2-digit",
-                          second: "2-digit",
                           hour12: true,
                         })
-                      : "—",
+                      : "N/A",
+                    "Last Updated": user.updatedAt
+                      ? new Date(user.updatedAt).toLocaleString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })
+                      : "N/A",
                   }}
                   className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 />
-              </CardContent>
-            </Card>
-
-            {/* KYC Information - Simplified */}
-            <Card className="shadow-sm border-0">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                  KYC Verification
-                </CardTitle>
-                <CardDescription>Identity verification status</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">KYC Status</p>
-                      <p className="text-sm text-gray-600">
-                        {user.kyc?._createdAt
-                          ? `Submitted on ${new Date(
-                              user.kyc._createdAt
-                            ).toLocaleDateString("en-GB")}`
-                          : "Not submitted"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={getStatusColor(user.kyc?.status)}>
-                      {user.kyc?.status || "Not Submitted"}
-                    </Badge>
-                    {user.kyc?._id && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          router.push(
-                            `/admin/user-management/kyc/${user.kyc._id}`
-                          )
-                        }
-                        className="flex items-center gap-2"
-                      >
-                        <Eye className="w-4 h-4" />
-                        View Details
-                      </Button>
-                    )}
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -355,16 +336,16 @@ export default function UserDetailsPage() {
                 {/* Account Deposit Update */}
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-gray-700">
-                    Account Deposit
+                    Account Balance
                   </label>
                   <div className="relative">
                     <Input
                       type="number"
                       placeholder="Enter amount..."
-                      value={accountBalance || 0}
+                      value={accountBalance}
                       onChange={(e) => setAccountBalance(e.target.value)}
                       min="0"
-                      step="0.01"
+                      step="1"
                     />
                   </div>
                   <p className="text-xs text-gray-500">
@@ -376,7 +357,7 @@ export default function UserDetailsPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3">
                   <Button
                     variant="outline"
                     onClick={handleClear}
@@ -393,7 +374,7 @@ export default function UserDetailsPage() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Updating...
+                        Updating
                       </>
                     ) : (
                       "Update User"
@@ -405,7 +386,7 @@ export default function UserDetailsPage() {
 
             {/* Quick Stats */}
             <Card className="shadow-sm border-0">
-              <CardHeader className="pb-4">
+              <CardHeader>
                 <CardTitle className="text-lg">Quick Stats</CardTitle>
               </CardHeader>
               <CardContent>
@@ -420,42 +401,44 @@ export default function UserDetailsPage() {
                       </span>
                     </div>
                     <span className="text-sm text-gray-900 font-medium">
-                      {new Date(user._createdAt).toLocaleDateString("en-GB")}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <CreditCard className="w-4 h-4 text-green-600" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Current Balance
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-900 font-medium">
-                      {user.accountBalance
-                        ? formatCurrency(user.accountBalance)
-                        : "₦0"}
+                      {user.createdAt
+                        ? new Date(user.createdAt).toLocaleDateString("en-GB")
+                        : "N/A"}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <FileText className="w-4 h-4 text-purple-600" />
+                        <Mail className="w-4 h-4 text-purple-600" />
                       </div>
                       <span className="text-sm font-medium text-gray-700">
-                        KYC Status
+                        Email Status
                       </span>
                     </div>
                     <Badge
                       className={
-                        getStatusColor(user.kyc?.status)
+                        user.emailVerified
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
                       }
                     >
-                      {user.kyc?.status || "Not Submitted"}
+                      {user.emailVerified ? "Verified" : "Unverified"}
                     </Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <Phone className="w-4 h-4 text-orange-600" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">
+                        Phone Number
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-900 font-medium">
+                      {user.phoneNumber || "Not provided"}
+                    </span>
                   </div>
                 </div>
               </CardContent>

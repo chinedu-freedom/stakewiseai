@@ -48,9 +48,9 @@ export default function Sidebar({ isOpen }) {
       <div className="space-y-4 flex flex-col">
         <div className="h-16 border-b border-gray-100 flex items-center justify-center text-center">
           {isOpen ? (
-            <h1 className="text-xl font-bold">PREMIUM INVEST</h1>
+            <h1 className="text-xl font-bold">StakeWiseAI</h1>
           ) : (
-            <h1 className="text-xl font-bold">PI</h1>
+            <h1 className="text-xl font-bold">SWI</h1>
           )}
         </div>
 

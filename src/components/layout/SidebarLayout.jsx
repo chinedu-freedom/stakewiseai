@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <Sidebar isOpen={isOpen} />
         <Topbar isOpen={isOpen} onToggle={toggleSidebar} />
         <main
-          className={`pt-20 p-6 min-h-screen transition-all duration-300 ${
+          className={`pt-20 min-h-screen transition-all duration-300 ${
             isOpen ? "ml-64" : "ml-20"
           }`}
         >
