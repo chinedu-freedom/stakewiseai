@@ -40,6 +40,12 @@ export default function SignupPage() {
       password: data.password,
       adminSecret: data.adminSecret || undefined,
     };
+
+    signupMutation.mutate(payload, {
+      onSuccess: () => {
+        router.push("/");
+      },
+    });
   };
 
   return (

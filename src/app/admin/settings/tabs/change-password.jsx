@@ -14,7 +14,7 @@ export default function ChangePassword() {
     confirmPassword: "",
   });
 
-  const postChangePassword = usePost("/api/admin/auth/change-password");
+  const postChangePassword = usePost("/api/admin/change-password");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

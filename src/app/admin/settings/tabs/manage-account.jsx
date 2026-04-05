@@ -9,9 +9,8 @@ import { Loader2 } from "lucide-react";
 import { useImageSrc } from "@/hooks/useImageSrc";
 
 export default function ManageAccount() {
-  // FIX: Add isFormData: true as third parameter
   const patchProfile = usePatch("/api/admin/profile", "profile", true);
-  
+
   const { data, refetch } = useFetchData(
     "/api/admin/profile",
     "profile"
@@ -25,44 +24,57 @@ export default function ManageAccount() {
     postalCode: "",
     image: null,
   });
+
   const imageSrc = useImageSrc(form?.image, "/placeholder-user.jpg");
 
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (data?.success) {
+    if (data?.success && data?.data) {
+      const user = data.data;
+
       setForm({
-        username: data.data.username || "",
-        email: data.data.email || "",
-        dateOfBirth: data.data.dateOfBirth
-          ? new Date(data.data.dateOfBirth).toISOString().substring(0, 10)
+        username: user.username || "",
+        email: user.email || "",
+        dateOfBirth: user.dateOfBirth
+          ? new Date(user.dateOfBirth).toISOString().substring(0, 10)
           : "",
-        city: data.data.city || "",
-        postalCode: data.data.postalCode || "",
-        image: data.data.image || null,
+        city: user.city || "",
+        postalCode: user.postalCode || "",
+        image: user.image || null,
       });
     }
   }, [data]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    if (e.target.files) setForm({ ...form, image: e.target.files[0] });
+    if (e.target.files && e.target.files[0]) {
+      setForm((prev) => ({ ...prev, image: e.target.files[0] }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData = new FormData();
+
     formData.append("dateOfBirth", form.dateOfBirth);
     formData.append("city", form.city);
     formData.append("postalCode", form.postalCode);
-    if (form.image instanceof File) formData.append("image", form.image);
-    
-    // FIX: Pass data directly, not in an options object
+
+    if (form.image instanceof File) {
+      formData.append("image", form.image);
+    }
+
+    // ✅ same pattern as your signup (direct payload)
     patchProfile.mutate(formData, {
-      onSuccess: () => refetch(),
+      onSuccess: () => {
+        refetch();
+      },
     });
   };
 
@@ -81,10 +93,7 @@ export default function ManageAccount() {
           onClick={() => fileInputRef.current?.click()}
         >
           <Avatar className="h-16 w-16">
-            <AvatarImage
-              src={imageSrc}
-              alt="Profile photo"
-            />
+            <AvatarImage src={imageSrc} alt="Profile photo" />
             <AvatarFallback>
               {form.username
                 ? form.username
@@ -95,6 +104,7 @@ export default function ManageAccount() {
                 : "AD"}
             </AvatarFallback>
           </Avatar>
+
           <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white opacity-0 hover:opacity-100 transition">
             <span className="text-xs font-medium">Change</span>
           </div>
@@ -105,6 +115,7 @@ export default function ManageAccount() {
           <p className="text-xs text-muted-foreground">
             Click the avatar to upload a new one.
           </p>
+
           <input
             ref={fileInputRef}
             type="file"

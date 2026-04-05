@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/schemas";
 import { Input } from "@/components/ui/auth-input";
@@ -8,33 +8,51 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePost } from "@/hooks/useApi"; // ✅ added
+import { usePost } from "@/hooks/useApi";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const verified = searchParams.get("verified");
-  const errorParam = searchParams.get("error");
+  const rememberedEmail =
+    typeof window !== "undefined"
+      ? localStorage.getItem("rememberedEmail")
+      : "";
 
-  // ✅ use your API hook
   const loginMutation = usePost("/api/admin/auth/login");
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: rememberedEmail || "",
       password: "",
+      keepMeLoggedIn: !!rememberedEmail,
     },
   });
 
-  // ✅ updated submit handler
   const onSubmit = (data) => {
-    loginMutation.mutate(data, {
+    const keepMeLoggedIn = data.keepMeLoggedIn ?? false;
+
+    // Store or remove remembered email
+    if (keepMeLoggedIn) {
+      localStorage.setItem("rememberedEmail", data.email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
+
+    const payload = {
+      email: data.email,
+      password: data.password,
+      keepMeLoggedIn, // 🔥 IMPORTANT
+    };
+
+    loginMutation.mutate(payload, {
       onSuccess: () => {
         router.push("/admin");
       },
@@ -84,15 +102,33 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Forgot password */}
-            {/* <div className="flex justify-end -mt-2">
+            {/* Keep me logged in */}
+            <div className="flex items-center justify-between -mt-2">
+              <Controller
+                name="keepMeLoggedIn"
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) =>
+                        field.onChange(checked === true)
+                      }
+                    />
+                    <span className="text-sm text-gray-600">
+                      Keep me logged in
+                    </span>
+                  </label>
+                )}
+              />
+
               <Link
                 href="/auth/forgot-password"
                 className="text-sm text-blue-600 hover:underline"
               >
                 Forgot password?
               </Link>
-            </div> */}
+            </div>
 
             {/* Submit */}
             <Button
@@ -100,20 +136,10 @@ export default function LoginPage() {
               className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-md py-3 font-medium transition-all"
               disabled={isLoading}
             >
-              {isLoading ? <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <rect width="10" height="10" x="1" y="1" fill="currentColor" rx="1">
-                    <animate attributeName="x" dur="0.2s" values="1;13" repeatCount="indefinite" />
-                  </rect>
-                </svg> : "Login"}
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </form>
 
-          {/* Signup link */}
           <p className="text-center text-sm text-gray-500 mt-6">
             Don't have an account?{" "}
             <Link
@@ -126,7 +152,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right section */}
       <div className="hidden lg:flex items-center justify-center w-1/2">
         <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
           <Image
@@ -141,14 +166,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-//  <svg
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   width="24"
-//                   height="24"
-//                   viewBox="0 0 24 24"
-//                 >
-//                   <rect width="10" height="10" x="1" y="1" fill="currentColor" rx="1">
-//                     <animate attributeName="x" dur="0.2s" values="1;13" repeatCount="indefinite" />
-//                   </rect>
-//                 </svg>
