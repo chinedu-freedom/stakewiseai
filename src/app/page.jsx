@@ -7,13 +7,12 @@ import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { usePost } from "@/hooks/useApi";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const rememberedEmail =
     typeof window !== "undefined"
