@@ -43,14 +43,14 @@ export default function WithdrawalDetailsPage() {
   const [selectedStatus, setSelectedStatus] = useState("");
 
   const { data, isLoading } = useFetchData(
-    `/api/admin/withdrawals/${id}`,
+    `/api/withdrawals/${id}`,
     `withdrawals/${id}`
   );
   const withdrawal = data?.data;
 
   // Use your usePatch hook
   const updateWithdrawal = usePatch(
-    (id) => `/api/admin/withdrawals/${id}`,
+    (id) => `/api/withdrawals/${id}`,
     `withdrawals/${id}`
   );
 
@@ -176,25 +176,25 @@ export default function WithdrawalDetailsPage() {
                   data={{
                     "Withdrawal ID": withdrawal._id,
                     Amount: formatCurrency(withdrawal.amount),
-                    Cryptocurrency: withdrawal.crypto,
-
                     Status: (
                       <Badge className={getStatusColor(withdrawal.status)}>
                         {withdrawal.status}
                       </Badge>
                     ),
-                    Requested: new Date(withdrawal.requestedAt).toLocaleString(
-                      "en-GB",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }
-                    ),
-                    "Last Updated": withdrawal._updatedAt
-                      ? new Date(withdrawal._updatedAt).toLocaleString(
+                    Requested: withdrawal.requestedAt
+                      ? new Date(withdrawal.requestedAt).toLocaleString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )
+                      : "—",
+                    "Last Updated": withdrawal.updatedAt
+                      ? new Date(withdrawal.updatedAt).toLocaleString(
                           "en-GB",
                           {
                             day: "numeric",
@@ -207,7 +207,7 @@ export default function WithdrawalDetailsPage() {
                       : "—",
                     "Wallet Address": (
                       <div className="flex items-center justify-between w-full gap-2 md:col-span-2">
-                        <code className="text-sm bg-gray-100 px-2 py-1 rounded-xl">
+                        <code className="text-sm bg-gray-100 px-2 py-1 rounded-xl break-all flex-1">
                           {withdrawal.walletAddress}
                         </code>
                         <Button
@@ -216,7 +216,7 @@ export default function WithdrawalDetailsPage() {
                           onClick={() =>
                             copyToClipboard(withdrawal.walletAddress)
                           }
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 flex-shrink-0"
                         >
                           <Copy className="w-3 h-3" />
                           Copy
@@ -224,9 +224,7 @@ export default function WithdrawalDetailsPage() {
                       </div>
                     ),
                   }}
-                  // gridLayout={true}
                   className="grid grid-cols-1 md:grid-cols-2 gap-4"
-
                 />
               </CardContent>
             </Card>
@@ -246,29 +244,26 @@ export default function WithdrawalDetailsPage() {
                 <KeyValueList
                   data={{
                     "User ID": withdrawal.user?._id,
-                    "Full Name": withdrawal.user?.username,
+                    Username: withdrawal.user?.username,
                     Email: withdrawal.user?.email,
-                    "Phone Number": withdrawal.user?.phoneNumber || "—",
                     "Account Status": (
                       <Badge
                         className={getStatusColor(
                           withdrawal.user?.accountStatus
                         )}
                       >
-                        {withdrawal.user?.accountStatus}
+                        {withdrawal.user?.accountStatus || "N/A"}
                       </Badge>
                     ),
-                    "Current Balance": withdrawal.user?.accountBalance
+                    "Account Balance": withdrawal.user?.accountBalance
                       ? formatCurrency(withdrawal.user.accountBalance)
-                      : "₦0",
+                      : "$0",
+                    "Reserved Profit": withdrawal.user?.reservedProfit
+                      ? formatCurrency(withdrawal.user.reservedProfit)
+                      : "$0",
                     "Total Profit": withdrawal.user?.totalProfit
                       ? formatCurrency(withdrawal.user.totalProfit)
-                      : "₦0",
-                    "Member Since": withdrawal.user?._createdAt
-                      ? new Date(withdrawal.user._createdAt).toLocaleDateString(
-                          "en-GB"
-                        )
-                      : "—",
+                      : "$0",
                   }}
                   className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 />
@@ -311,8 +306,7 @@ export default function WithdrawalDetailsPage() {
                       </p>
                       <p className="text-gray-600">
                         Send{" "}
-                        <strong>{formatCurrency(withdrawal.amount)}</strong> in{" "}
-                        <strong>{withdrawal.crypto}</strong> to the copied
+                        <strong>{formatCurrency(withdrawal.amount)}</strong> to the copied
                         wallet address
                       </p>
                     </div>
@@ -392,7 +386,7 @@ export default function WithdrawalDetailsPage() {
                       <strong>Note:</strong> Approving this withdrawal will
                       automatically deduct{" "}
                       <strong>{formatCurrency(withdrawal.amount)}</strong> from
-                      the user's account deposit.
+                      the user's account balance.
                     </p>
                   </div>
                 )}
@@ -428,7 +422,9 @@ export default function WithdrawalDetailsPage() {
                       </>
                     ) : (
                       `Confirm ${
-                        selectedStatus === "successful" ? "Approve" : "Reject"
+                        selectedStatus === "successful" ? "Approve" : 
+                        selectedStatus === "failed" ? "Reject" : 
+                        selectedStatus === "pending" ? "Pending" : ""
                       }`
                     )}
                   </Button>
@@ -467,9 +463,11 @@ export default function WithdrawalDetailsPage() {
                       </span>
                     </div>
                     <span className="text-sm text-gray-900 font-medium">
-                      {new Date(withdrawal.requestedAt).toLocaleDateString(
-                        "en-GB"
-                      )}
+                      {withdrawal.requestedAt
+                        ? new Date(withdrawal.requestedAt).toLocaleDateString(
+                            "en-GB"
+                          )
+                        : "—"}
                     </span>
                   </div>
 
@@ -485,7 +483,23 @@ export default function WithdrawalDetailsPage() {
                     <span className="text-sm text-gray-900 font-medium">
                       {withdrawal.user?.accountBalance
                         ? formatCurrency(withdrawal.user.accountBalance)
-                        : "₦0"}
+                        : "$0"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <Wallet className="w-4 h-4 text-orange-600" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">
+                        Reserved Profit
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-900 font-medium">
+                      {withdrawal.user?.reservedProfit
+                        ? formatCurrency(withdrawal.user.reservedProfit)
+                        : "$0"}
                     </span>
                   </div>
                 </div>
