@@ -1,13 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import Tabs from "@/components/ui/tabs";
 import ManageAccount from "./tabs/manage-account";
 import ChangePassword from "./tabs/change-password";
 import { useSearchParams } from "next/navigation";
 
-export default function SettingsPage() {
+function SettingsContent() {
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "manage-account";
+
   const tabs = ["Manage Account", "Change Password"];
 
   return (
@@ -21,5 +23,13 @@ export default function SettingsPage() {
         {tab === "change-password" && <ChangePassword />}
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="p-6">Loading...</div>}>
+      <SettingsContent />
+    </Suspense>
   );
 }
