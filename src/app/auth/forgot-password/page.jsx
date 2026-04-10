@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
+    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
       {/* Left section (Form) */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-sm">
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
       <div className="hidden lg:flex items-center justify-center w-1/2">
         <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
           <Image
-            src="/assets/auth-image.png"
+            src="/assets/auth-image.svg"
             alt="Forgot password visual"
             width={800}
             height={800}

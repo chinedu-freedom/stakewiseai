@@ -38,7 +38,7 @@ export default function NotFoundPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
+    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
       {/* Left section - Content */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-md">
@@ -190,7 +190,7 @@ export default function NotFoundPage() {
       <div className="hidden lg:flex items-center justify-center w-1/2">
         <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md relative">
           <Image
-            src="/assets/auth-image.png"
+            src="/assets/auth-image.svg"
             alt="404 page not found visual"
             width={800}
             height={800}

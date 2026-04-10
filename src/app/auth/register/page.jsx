@@ -49,7 +49,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+    <div className="min-h-screen justify-center flex flex-col md:flex-row bg-white">
       {/* Left section */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
@@ -165,7 +165,7 @@ export default function SignupPage() {
       <div className="hidden md:flex w-1/2 items-center justify-center">
         <div className="w-[70%] h-[75%] overflow-hidden rounded-2xl shadow-md">
           <Image
-            src="/assets/auth-image.png"
+            src="/assets/auth-image.svg"
             alt="Signup visual"
             width={600}
             height={600}
