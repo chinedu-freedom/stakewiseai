@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import imageUrlBuilder from "@sanity/image-url";
 import { client } from "@/lib/sanity";
+import { createImageUrlBuilder } from '@sanity/image-url'
 
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder(client);
 
 function buildSanityImage(image) {
   if (!image?.asset) return null;
