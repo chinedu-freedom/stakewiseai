@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 import Tabs from "@/components/ui/tabs";
 import ManageAccount from "./tabs/manage-account";
