@@ -20,7 +20,7 @@ export default function TransactionsPage() {
         <h1 className="text-xl font-semibold">Transactions</h1>
         <div className="w-90">
           <SearchBar
-            placeholder="Search by Transaction ID, User ID or Name"
+            placeholder="Search by Username or Transaction ID"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

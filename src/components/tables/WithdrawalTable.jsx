@@ -51,7 +51,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
 
   const { data, isLoading, refetch, error } = useFetchData(
     `/api/withdrawals?page=${page}&limit=${limit}`,
-    ["withdrawals", page]
+    ["withdrawals", page],
   );
 
   const deleteWithdrawal = useDelete(
@@ -66,12 +66,12 @@ export default function WithdrawalTable({ searchTerm = "" }) {
           refetch(); // Refetch current page
         }
       },
-    }
+    },
   );
-  
+
   const patchWithdrawal = usePatch(
     (id) => `/api/withdrawals/${id}`,
-    ["withdrawals", page]
+    ["withdrawals", page],
   );
 
   if (error)
@@ -84,7 +84,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
   // Extract records and pagination from the new response structure
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination || {};
-  
+
   const transactions = records;
   const meta = {
     totalItems: pagination.totalItems,
@@ -101,13 +101,15 @@ export default function WithdrawalTable({ searchTerm = "" }) {
     const list = !searchTerm.trim()
       ? transactions
       : transactions.filter((txn) =>
-          [txn.user?.username, txn._id, txn.user?._id]
+          [txn.user?.username, txn._id]
             .filter(Boolean)
-            .some((val) => val.toLowerCase().includes(searchTerm.toLowerCase()))
+            .some((val) =>
+              val.toLowerCase().includes(searchTerm.toLowerCase()),
+            ),
         );
 
     return list.sort(
-      (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt)
+      (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt),
     );
   }, [transactions, searchTerm]);
 
@@ -146,7 +148,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
         setIsProcessingId(null);
       }
     },
-    [patchWithdrawal, refetch]
+    [patchWithdrawal, refetch],
   );
 
   const handleDecline = useCallback(
@@ -165,7 +167,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
         setIsProcessingId(null);
       }
     },
-    [patchWithdrawal, refetch]
+    [patchWithdrawal, refetch],
   );
 
   const handleConfirmDelete = async () => {
@@ -200,7 +202,6 @@ export default function WithdrawalTable({ searchTerm = "" }) {
         <TableHeader>
           <TableRow>
             <TableHead>Withdrawal ID</TableHead>
-            {/* <TableHead>User ID</TableHead> */}
             <TableHead>Username</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Amount</TableHead>
@@ -236,12 +237,12 @@ export default function WithdrawalTable({ searchTerm = "" }) {
                       {txn.status || "N/A"}
                     </Badge>
                   </TableCell>
-                
-                     <TableCell>
-                                    {txn.requestedAt
-                                      ? new Date(txn.requestedAt).toLocaleDateString("en-GB")
-                                      : "—"}
-                                  </TableCell>
+
+                  <TableCell>
+                    {txn.requestedAt
+                      ? new Date(txn.requestedAt).toLocaleDateString("en-GB")
+                      : "—"}
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu
                       open={openMenuId === txn._id}
@@ -261,7 +262,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
                         <DropdownMenuItem
                           onClick={() =>
                             router.push(
-                              `/admin/transactions/withdrawal/${txn._id}`
+                              `/admin/transactions/withdrawal/${txn._id}`,
                             )
                           }
                         >
@@ -321,7 +322,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
           ) : (
             <TableRow>
               <TableCell colSpan={8} className="text-center py-6 text-gray-500">
-                No withdrawals found.
+                No withdrawal(s) found.
               </TableCell>
             </TableRow>
           )}
