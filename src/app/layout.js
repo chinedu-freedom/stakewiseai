@@ -3,7 +3,7 @@ import ConfigLayout from "./config-layout";
 
 
 export const metadata = {
-  title: "Premium Invest",
+  title: "StakeWiseAI",
 };
 
 export default function RootLayout({ children }) {
