@@ -210,7 +210,7 @@ export default function PlanDialog({ open, setOpen, initialData }) {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className="mt-2">Cancel</Button>
           </DialogClose>
 
           <Button
