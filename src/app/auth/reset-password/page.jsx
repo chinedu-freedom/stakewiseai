@@ -129,7 +129,7 @@ export default function ResetPasswordPage() {
       <div className="hidden lg:flex items-center justify-center w-1/2">
         <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
           <Image
-            src="/assets/auth-image.svg"
+            src="/assets/auth-image.png"
             alt="Reset password visual"
             width={800}
             height={800}

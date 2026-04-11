@@ -113,20 +113,21 @@ export default function PlansTable({ searchTerm = "" }) {
 
   return (
     <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Plan Title</TableHead>
-            <TableHead>Min Deposit</TableHead>
-            <TableHead>Max Deposit</TableHead>
-            <TableHead>Daily Profit</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Has Fixed Deposit</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="whitespace-nowrap">Plan Title</TableHead>
+              <TableHead className="whitespace-nowrap">Min Deposit</TableHead>
+              <TableHead className="whitespace-nowrap">Max Deposit</TableHead>
+              <TableHead className="whitespace-nowrap">Daily Profit</TableHead>
+              <TableHead className="whitespace-nowrap">Duration</TableHead>
+              <TableHead className="whitespace-nowrap">Has Fixed Deposit</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="whitespace-nowrap">Created At</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
 
         <TableBody>
           {isLoading ? (
@@ -136,16 +137,16 @@ export default function PlansTable({ searchTerm = "" }) {
           ) : filteredData.length ? (
             filteredData.map((plan) => (
               <TableRow key={plan._id}>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium whitespace-nowrap">
                   {plan.title}
                 </TableCell>
 
-                <TableCell>{formatCurrency(plan.minDeposit)}</TableCell>
-                <TableCell>{formatCurrency(plan.maxDeposit)}</TableCell>
-                <TableCell>{plan.dailyProfit}%</TableCell>
-                <TableCell>{plan.contractDuration} days</TableCell>
+                <TableCell className="whitespace-nowrap">{formatCurrency(plan.minDeposit)}</TableCell>
+                <TableCell className="whitespace-nowrap">{formatCurrency(plan.maxDeposit)}</TableCell>
+                <TableCell className="whitespace-nowrap">{plan.dailyProfit}%</TableCell>
+                <TableCell className="whitespace-nowrap">{plan.contractDuration} days</TableCell>
 
-                <TableCell className="text-center">
+                <TableCell className="text-center whitespace-nowrap">
                   {plan.isFixedDeposit ? "Yes" : "No"}
                 </TableCell>
 
@@ -155,7 +156,7 @@ export default function PlansTable({ searchTerm = "" }) {
                   </Badge>
                 </TableCell>
 
-                <TableCell>{formatDate(plan.createdAt)}</TableCell>
+                <TableCell className="whitespace-nowrap">{formatDate(plan.createdAt)}</TableCell>
 
                 <TableCell className="text-right">
                   <DropdownMenu
@@ -210,7 +211,8 @@ export default function PlansTable({ searchTerm = "" }) {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+        </Table>
+      </div>
 
       <Pagination meta={meta} onPageChange={setPage} />
 

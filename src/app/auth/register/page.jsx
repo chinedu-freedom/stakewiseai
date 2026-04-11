@@ -165,7 +165,7 @@ export default function SignupPage() {
       <div className="hidden md:flex w-1/2 items-center justify-center">
         <div className="w-[70%] h-[75%] overflow-hidden rounded-2xl shadow-md">
           <Image
-            src="/assets/auth-image.svg"
+            src="/assets/auth-image.png"
             alt="Signup visual"
             width={600}
             height={600}

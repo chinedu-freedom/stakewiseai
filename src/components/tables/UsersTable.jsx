@@ -109,103 +109,105 @@ export default function UsersTable({ searchTerm = "" }) {
 
   return (
     <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>User ID</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Phone Number</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="whitespace-nowrap">User ID</TableHead>
+              <TableHead className="whitespace-nowrap">Username</TableHead>
+              <TableHead className="whitespace-nowrap">Email</TableHead>
+              <TableHead className="whitespace-nowrap">Phone Number</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="whitespace-nowrap">Created At</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
 
-        <TableBody>
-          {isLoading ? (
-            Array(6)
-              .fill(0)
-              .map((_, i) => <TableRowSkeleton key={i} columns={7} />)
-          ) : filteredData.length ? (
-            filteredData.map((user) => (
-              <TableRow key={user._id}>
-                <TableCell className="font-medium truncate max-w-[120px]">
-                  {user._id}
-                </TableCell>
+          <TableBody>
+            {isLoading ? (
+              Array(6)
+                .fill(0)
+                .map((_, i) => <TableRowSkeleton key={i} columns={7} />)
+            ) : filteredData.length ? (
+              filteredData.map((user) => (
+                <TableRow key={user._id}>
+                  <TableCell className="font-medium truncate max-w-[120px] whitespace-nowrap">
+                    {user._id}
+                  </TableCell>
 
-                <TableCell>{user.username}</TableCell>
+                  <TableCell className="whitespace-nowrap">{user.username}</TableCell>
 
-                <TableCell>{user.email}</TableCell>
+                  <TableCell className="whitespace-nowrap">{user.email}</TableCell>
 
-                <TableCell>{user.phoneNumber || "—"}</TableCell>
+                  <TableCell className="whitespace-nowrap">{user.phoneNumber || "—"}</TableCell>
 
-                <TableCell>
-                  <Badge className={getStatusColor(user.accountStatus)}>
-                    {user.accountStatus}
-                  </Badge>
-                </TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(user.accountStatus)}>
+                      {user.accountStatus}
+                    </Badge>
+                  </TableCell>
 
-                <TableCell>
-                  {user.createdAt
-                    ? new Date(user.createdAt).toLocaleDateString("en-GB")
-                    : "—"}
-                </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {user.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString("en-GB")
+                      : "—"}
+                  </TableCell>
 
-                <TableCell className="text-right">
-                  <DropdownMenu
-                    open={openMenuId === user._id}
-                    onOpenChange={(open) =>
-                      setOpenMenuId(open ? user._id : null)
-                    }
-                  >
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
+                  <TableCell className="text-right">
+                    <DropdownMenu
+                      open={openMenuId === user._id}
+                      onOpenChange={(open) =>
+                        setOpenMenuId(open ? user._id : null)
+                      }
+                    >
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
+                      <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
 
-                      {/* VIEW */}
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.push(`/admin/user-management/${user._id}`)
-                        }
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
+                        {/* VIEW */}
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(`/admin/user-management/${user._id}`)
+                          }
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </DropdownMenuItem>
 
-                      {/* DELETE */}
-                      <DropdownMenuItem
-                        className="text-destructive cursor-pointer"
-                        onClick={() => handleDeleteClick(user)}
-                        disabled={isDeleting}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        {/* DELETE */}
+                        <DropdownMenuItem
+                          className="text-destructive cursor-pointer"
+                          onClick={() => handleDeleteClick(user)}
+                          disabled={isDeleting}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                  No users found.
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                No users found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       <Pagination meta={meta} onPageChange={setPage} />
 
-      {/* DELETE MODAL (same as PlansTable) */}
+      {/* DELETE MODAL */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -234,8 +236,8 @@ export default function UsersTable({ searchTerm = "" }) {
             >
               {isDeleting ? (
                 <>
-                  Deleting
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Deleting
                 </>
               ) : (
                 "Delete"

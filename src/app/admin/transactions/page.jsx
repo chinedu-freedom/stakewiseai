@@ -17,13 +17,14 @@ function TransactionsContent() {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between rounded-md p-4 bg-white">
-        <h1 className="text-xl font-semibold">Transactions</h1>
+    <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm sm:bg-transparent sm:rounded-none sm:border-0 sm:shadow-none">
 
-        <div className="w-90">
+        <h1 className="text-xl font-bold text-gray-800">Transactions</h1>
+
+        <div className="w-full sm:w-80">
           <SearchBar
-            placeholder="Search by Username or Transaction ID"
+            placeholder="Search transactions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

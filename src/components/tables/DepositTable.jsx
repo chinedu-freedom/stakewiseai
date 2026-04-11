@@ -370,127 +370,130 @@ export default function DepositTable({ searchTerm = "" }) {
   );
 
   return (
-    <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Deposit ID</TableHead>
-            <TableHead>User ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Crypto</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            Array(6)
-              .fill(0)
-              .map((_, idx) => <TableRowSkeleton key={idx} />)
-          ) : paginatedData.length > 0 ? (
-            paginatedData.map((dep) => {
-              const isApproved = dep.status?.toLowerCase() === "successful" || dep.status?.toLowerCase() === "approved";
-              const isDeclined = dep.status?.toLowerCase() === "failed" || dep.status?.toLowerCase() === "rejected";
-              const isActionDisabled = isApproved || isDeclined;
-              
-              return (
-                <TableRow key={dep._id}>
-                  <TableCell className="truncate max-w-[160px] font-medium">
-                    {dep._id || "N/A"}
-                  </TableCell>
-                  <TableCell className="truncate max-w-[160px] font-medium">
-                    {dep.user?._id || "N/A"}
-                  </TableCell>
-                  <TableCell>{dep.user?.username || "N/A"}</TableCell>
-                  <TableCell>{formatCurrency(dep.amount)}</TableCell>
-                  <TableCell>{dep.crypto || dep.currency || "N/A"}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(dep.status)}>
-                      {dep.status || "N/A"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu
-                      open={openMenuId === dep._id}
-                      onOpenChange={(isOpen) =>
-                        setOpenMenuId(isOpen ? dep._id : null)
-                      }
-                    >
-                      <DropdownMenuTrigger asChild disabled={isDeleting}>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            router.push(
-                              `/admin/transactions/deposit/${dep._id}`
-                            )
-                          }
-                        >
-                          <Eye className="w-4 h-4 mr-2" /> View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className={`${
-                            isApproved
-                              ? "opacity-50 cursor-not-allowed"
-                              : "text-green-600 hover:text-green-700"
-                          }`}
-                          disabled={
-                            isApproved ||
-                            isActionDisabled ||
-                            isProcessingId === dep._id
-                          }
-                          onClick={() => !isActionDisabled && handleAccept(dep)}
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" /> Approve
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className={`${
-                            isDeclined
-                              ? "opacity-50 cursor-not-allowed"
-                              : "text-red-600 hover:text-red-700"
-                          }`}
-                          disabled={
-                            isDeclined ||
-                            isActionDisabled ||
-                            isProcessingId === dep._id
-                          }
-                          onClick={() => !isActionDisabled && handleDecline(dep)}
-                        >
-                          <XCircle className="w-4 h-4 mr-2" /> Decline
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleDeleteClick(dep)}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-lg font-medium">No deposits found</p>
-                  <p className="text-sm text-gray-400">
-                    {searchTerm ? "Try adjusting your search term" : "Check back later for new deposits"}
-                  </p>
-                </div>
-              </TableCell>
+    <div className="rounded-lg border bg-white shadow-sm overflow-hidden text-sm">
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="whitespace-nowrap">Deposit ID</TableHead>
+              <TableHead className="whitespace-nowrap">User ID</TableHead>
+              <TableHead className="whitespace-nowrap">Name</TableHead>
+              <TableHead className="whitespace-nowrap">Amount</TableHead>
+              <TableHead className="whitespace-nowrap">Crypto</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array(6)
+                .fill(0)
+                .map((_, idx) => <TableRowSkeleton key={idx} />)
+            ) : paginatedData.length > 0 ? (
+              paginatedData.map((dep) => {
+                const isApproved = dep.status?.toLowerCase() === "successful" || dep.status?.toLowerCase() === "approved";
+                const isDeclined = dep.status?.toLowerCase() === "failed" || dep.status?.toLowerCase() === "rejected";
+                const isActionDisabled = isApproved || isDeclined;
+                
+                return (
+                  <TableRow key={dep._id}>
+                    <TableCell className="truncate max-w-[160px] font-medium whitespace-nowrap">
+                      {dep._id || "N/A"}
+                    </TableCell>
+                    <TableCell className="truncate max-w-[160px] font-medium whitespace-nowrap">
+                      {dep.user?._id || "N/A"}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{dep.user?.username || "N/A"}</TableCell>
+                    <TableCell className="whitespace-nowrap font-semibold text-gray-900">{formatCurrency(dep.amount)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{dep.crypto || dep.currency || "N/A"}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(dep.status)}>
+                        {dep.status || "N/A"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu
+                        open={openMenuId === dep._id}
+                        onOpenChange={(isOpen) =>
+                          setOpenMenuId(isOpen ? dep._id : null)
+                        }
+                      >
+                        <DropdownMenuTrigger asChild disabled={isDeleting}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(
+                                `/admin/transactions/deposit/${dep._id}`
+                              )
+                            }
+                            className="cursor-pointer"
+                          >
+                            <Eye className="w-4 h-4 mr-2" /> View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className={`${
+                              isApproved
+                                ? "opacity-50 cursor-not-allowed text-gray-400"
+                                : "text-green-600 hover:text-green-700 font-medium cursor-pointer"
+                            }`}
+                            disabled={
+                              isApproved ||
+                              isActionDisabled ||
+                              isProcessingId === dep._id
+                            }
+                            onClick={() => !isActionDisabled && handleAccept(dep)}
+                          >
+                            <CheckCircle className="w-4 h-4 mr-2" /> Approve
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className={`${
+                              isDeclined
+                                ? "opacity-50 cursor-not-allowed text-gray-400"
+                                : "text-red-600 hover:text-red-700 font-medium cursor-pointer"
+                            }`}
+                            disabled={
+                              isDeclined ||
+                              isActionDisabled ||
+                              isProcessingId === dep._id
+                            }
+                            onClick={() => !isActionDisabled && handleDecline(dep)}
+                          >
+                            <XCircle className="w-4 h-4 mr-2" /> Decline
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive font-medium cursor-pointer"
+                            onClick={() => handleDeleteClick(dep)}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center py-10 text-gray-500">
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-lg font-medium">No deposits found</p>
+                    <p className="text-sm text-gray-400">
+                      {searchTerm ? "Try adjusting your search term" : "Check back later for new deposits"}
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       <Pagination meta={meta} onPageChange={setPage} />
 
       {/* Delete Dialog */}

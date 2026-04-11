@@ -128,11 +128,11 @@ export default function WithdrawalDetailsPage() {
     withdrawal.status === "successful" || withdrawal.status === "failed";
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Button
               variant="outline"
               onClick={() => router.back()}
@@ -142,16 +142,16 @@ export default function WithdrawalDetailsPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Withdrawal Details
               </h1>
-              <p className="text-gray-600">
+              <p className="text-sm text-gray-600">
                 Review and process withdrawal request
               </p>
             </div>
           </div>
           <Badge
-            className={getStatusColor(withdrawal.status) + " text-sm px-3 py-1"}
+            className={getStatusColor(withdrawal.status) + " text-sm px-3 py-1 self-start sm:self-auto"}
           >
             {withdrawal.status?.toUpperCase() || "PENDING"}
           </Badge>

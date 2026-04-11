@@ -197,137 +197,143 @@ export default function WithdrawalTable({ searchTerm = "" }) {
   );
 
   return (
-    <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Withdrawal ID</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Requested At</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {isLoading ? (
-            Array(8)
-              .fill(0)
-              .map((_, idx) => <TableRowSkeleton key={idx} />)
-          ) : filteredData.length > 0 ? (
-            filteredData.map((txn) => {
-              const isApproved = txn.status?.toLowerCase() === "successful";
-              const isDeclined = txn.status?.toLowerCase() === "failed";
-              const isActionDisabled = isApproved || isDeclined;
-
-              return (
-                <TableRow key={txn._id}>
-                  <TableCell className="truncate max-w-[160px] font-medium">
-                    {txn._id || "N/A"}
-                  </TableCell>
-                  <TableCell>{txn.user?.username || "N/A"}</TableCell>
-                  <TableCell className="truncate max-w-[160px] font-medium">
-                    {txn.user?.email || "N/A"}
-                  </TableCell>
-                  <TableCell>${txn.amount?.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(txn.status)}>
-                      {txn.status || "N/A"}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell>
-                    {txn.requestedAt
-                      ? new Date(txn.requestedAt).toLocaleDateString("en-GB")
-                      : "—"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu
-                      open={openMenuId === txn._id}
-                      onOpenChange={(isOpen) =>
-                        setOpenMenuId(isOpen ? txn._id : null)
-                      }
-                    >
-                      <DropdownMenuTrigger asChild disabled={isDeleting}>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-                        <DropdownMenuItem
-                          onClick={() =>
-                            router.push(
-                              `/admin/transactions/withdrawal/${txn._id}`,
-                            )
-                          }
-                        >
-                          <Eye className="w-4 h-4 mr-2" /> View Details
-                        </DropdownMenuItem>
-
-                        <DropdownMenuSeparator />
-
-                        <DropdownMenuItem
-                          className={`${
-                            isApproved
-                              ? "opacity-50 cursor-not-allowed"
-                              : "text-green-600 hover:text-green-700"
-                          }`}
-                          disabled={
-                            isActionDisabled ||
-                            patchWithdrawal.isLoading ||
-                            isProcessingId === txn._id
-                          }
-                          onClick={() => !isActionDisabled && handleAccept(txn)}
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" /> Approve
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          className={`${
-                            isDeclined
-                              ? "opacity-50 cursor-not-allowed"
-                              : "text-yellow-600 hover:text-yellow-700"
-                          }`}
-                          disabled={
-                            isActionDisabled ||
-                            patchWithdrawal.isLoading ||
-                            isProcessingId === txn._id
-                          }
-                          onClick={() =>
-                            !isActionDisabled && handleDecline(txn)
-                          }
-                        >
-                          <XCircle className="w-4 h-4 mr-2" /> Decline
-                        </DropdownMenuItem>
-
-                        <DropdownMenuSeparator />
-
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleDeleteClick(txn)}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={8} className="text-center py-6 text-gray-500">
-                No withdrawal(s) found.
-              </TableCell>
+    <div className="rounded-lg border bg-white shadow-sm overflow-hidden text-sm">
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="whitespace-nowrap">Withdrawal ID</TableHead>
+              <TableHead className="whitespace-nowrap">Username</TableHead>
+              <TableHead className="whitespace-nowrap">Email</TableHead>
+              <TableHead className="whitespace-nowrap">Amount</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="whitespace-nowrap">Requested At</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {isLoading ? (
+              Array(8)
+                .fill(0)
+                .map((_, idx) => <TableRowSkeleton key={idx} />)
+            ) : filteredData.length > 0 ? (
+              filteredData.map((txn) => {
+                const isApproved = txn.status?.toLowerCase() === "successful";
+                const isDeclined = txn.status?.toLowerCase() === "failed";
+                const isActionDisabled = isApproved || isDeclined;
+
+                return (
+                  <TableRow key={txn._id}>
+                    <TableCell className="truncate max-w-[160px] font-medium whitespace-nowrap">
+                      {txn._id || "N/A"}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{txn.user?.username || "N/A"}</TableCell>
+                    <TableCell className="truncate max-w-[200px] whitespace-nowrap">
+                      {txn.user?.email || "N/A"}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap font-semibold text-gray-900">${txn.amount?.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(txn.status)}>
+                        {txn.status || "N/A"}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap">
+                      {txn.requestedAt
+                        ? new Date(txn.requestedAt).toLocaleDateString("en-GB")
+                        : "—"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu
+                        open={openMenuId === txn._id}
+                        onOpenChange={(isOpen) =>
+                          setOpenMenuId(isOpen ? txn._id : null)
+                        }
+                      >
+                        <DropdownMenuTrigger asChild disabled={isDeleting}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(
+                                `/admin/transactions/withdrawal/${txn._id}`,
+                              )
+                            }
+                            className="cursor-pointer"
+                          >
+                            <Eye className="w-4 h-4 mr-2" /> View Details
+                          </DropdownMenuItem>
+
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuItem
+                            className={`${
+                              isApproved
+                                ? "opacity-50 cursor-not-allowed text-gray-400"
+                                : "text-green-600 hover:text-green-700 font-medium cursor-pointer"
+                            }`}
+                            disabled={
+                              isActionDisabled ||
+                              patchWithdrawal.isLoading ||
+                              isProcessingId === txn._id
+                            }
+                            onClick={() => !isActionDisabled && handleAccept(txn)}
+                          >
+                            <CheckCircle className="w-4 h-4 mr-2" /> Approve
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            className={`${
+                              isDeclined
+                                ? "opacity-50 cursor-not-allowed text-gray-400"
+                                : "text-yellow-600 hover:text-yellow-700 font-medium cursor-pointer"
+                            }`}
+                            disabled={
+                              isActionDisabled ||
+                              patchWithdrawal.isLoading ||
+                              isProcessingId === txn._id
+                            }
+                            onClick={() =>
+                              !isActionDisabled && handleDecline(txn)
+                            }
+                          >
+                            <XCircle className="w-4 h-4 mr-2" /> Decline
+                          </DropdownMenuItem>
+
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuItem
+                            className="text-destructive font-medium cursor-pointer"
+                            onClick={() => handleDeleteClick(txn)}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-10 text-gray-500">
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-lg font-medium">No withdrawal(s) found</p>
+                    <p className="text-sm text-gray-400">Check back later for new requests</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Pagination */}
       {pagination && pagination.totalPages > 0 && (

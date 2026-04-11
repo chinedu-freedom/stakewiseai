@@ -15,8 +15,8 @@ const data = [
 export default function TransactionChart() {
   return (
     <div className="bg-white rounded-xl shadow-card">
-      <h3 className="text-xl font-semibold mb-4 text-gray-700">Transaction Details</h3>
-      <ResponsiveContainer width="100%" height={260}>
+      <h3 className="text-xl font-semibold mb-4 text-gray-700 pl-2 pt-2">Transaction Details</h3>
+      <ResponsiveContainer className="-ml-5" width="100%" height={260}>
         <LineChart data={data}>
           <XAxis dataKey="name" stroke="#9ca3af" />
           <YAxis stroke="#9ca3af" />

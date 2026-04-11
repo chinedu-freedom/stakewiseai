@@ -218,114 +218,116 @@ export default function InvestmentTable({ searchTerm = "" }) {
 
   return (
     <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="whitespace-nowrap">Investment ID</TableHead>
-            <TableHead className="whitespace-nowrap">User ID</TableHead>
-            <TableHead className="whitespace-nowrap">Name</TableHead>
-            <TableHead className="whitespace-nowrap">Plan Title</TableHead>
-            <TableHead className="whitespace-nowrap">Amount</TableHead>
-            <TableHead className="whitespace-nowrap">Status</TableHead>
-            <TableHead className="whitespace-nowrap">Created At</TableHead>
-            <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            Array(6)
-              .fill(0)
-              .map((_, idx) => (
-                <TableRowSkeleton 
-                  key={idx} 
-                  columns={8} 
-                  maxWidth="120px" 
-                />
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="whitespace-nowrap">Investment ID</TableHead>
+              <TableHead className="whitespace-nowrap">User ID</TableHead>
+              <TableHead className="whitespace-nowrap">Name</TableHead>
+              <TableHead className="whitespace-nowrap">Plan Title</TableHead>
+              <TableHead className="whitespace-nowrap">Amount</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="whitespace-nowrap">Created At</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array(6)
+                .fill(0)
+                .map((_, idx) => (
+                  <TableRowSkeleton 
+                    key={idx} 
+                    columns={8} 
+                    maxWidth="120px" 
+                  />
+                ))
+            ) : paginatedData.length > 0 ? (
+              paginatedData.map((inv) => (
+                <TableRow key={inv._id}>
+                  <TableCell className="truncate max-w-[120px] font-mono text-xs whitespace-nowrap">
+                    {inv._id || "N/A"}
+                  </TableCell>
+                  <TableCell className="truncate max-w-[120px] font-mono text-xs whitespace-nowrap">
+                    {inv.user?._id || "N/A"}
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {inv.user?.username || "N/A"}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {inv.plan?.title || "N/A"}
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {formatCurrency(inv.amount)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(inv.status)}>
+                      {inv.status || "N/A"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm whitespace-nowrap">
+                    {formatDate(inv.createdAt)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu
+                      open={openMenuId === inv._id}
+                      onOpenChange={(isOpen) =>
+                        setOpenMenuId(isOpen ? inv._id : null)
+                      }
+                    >
+                      <DropdownMenuTrigger asChild disabled={isDeleting}>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-8 w-8"
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(`/admin/investment-management/investments/${inv._id}`)
+                          }
+                          className="cursor-pointer"
+                        >
+                          <Eye className="w-4 h-4 mr-2" /> 
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-destructive cursor-pointer"
+                          onClick={() => handleDeleteClick(inv)}
+                          disabled={isDeleting}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> 
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
               ))
-          ) : paginatedData.length > 0 ? (
-            paginatedData.map((inv) => (
-              <TableRow key={inv._id}>
-                <TableCell className="truncate max-w-[120px] font-mono text-xs">
-                  {inv._id || "N/A"}
-                </TableCell>
-                <TableCell className="truncate max-w-[120px] font-mono text-xs">
-                  {inv.user?._id || "N/A"}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {inv.user?.username || "N/A"}
-                </TableCell>
-                <TableCell>
-                  {inv.plan?.title || "N/A"}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {formatCurrency(inv.amount)}
-                </TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(inv.status)}>
-                    {inv.status || "N/A"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {formatDate(inv.createdAt)}
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu
-                    open={openMenuId === inv._id}
-                    onOpenChange={(isOpen) =>
-                      setOpenMenuId(isOpen ? inv._id : null)
-                    }
-                  >
-                    <DropdownMenuTrigger asChild disabled={isDeleting}>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        className="h-8 w-8"
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.push(`/admin/financial-services/investments/${inv._id}`)
-                        }
-                        className="cursor-pointer"
-                      >
-                        <Eye className="w-4 h-4 mr-2" /> 
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-destructive cursor-pointer"
-                        onClick={() => handleDeleteClick(inv)}
-                        disabled={isDeleting}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" /> 
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            ) : (
+              <TableRow>
+                <TableCell 
+                  colSpan={8} 
+                  className="text-center py-10 text-gray-500"
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-lg font-medium">No investments found</p>
+                    <p className="text-sm text-gray-400">
+                      {searchTerm ? "Try adjusting your search term" : "Check back later for new investments"}
+                    </p>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell 
-                colSpan={8} 
-                className="text-center py-10 text-gray-500"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-lg font-medium">No investments found</p>
-                  <p className="text-sm text-gray-400">
-                    {searchTerm ? "Try adjusting your search term" : "Check back later for new investments"}
-                  </p>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       
       <Pagination meta={meta} onPageChange={setPage} />
 

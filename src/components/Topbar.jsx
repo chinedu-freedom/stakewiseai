@@ -45,9 +45,9 @@ export default function Topbar({ isOpen, onToggle }) {
 
   return (
     <header
-      className={`fixed top-0 right-0 h-16 flex items-center justify-between bg-white border-b px-6 z-10 transition-all duration-300 ${
-        isOpen ? "left-64" : "left-20"
-      }`}
+      className={`fixed top-0 right-0 h-16 flex items-center justify-between bg-white/80 backdrop-blur-md border-b px-4 md:px-6 z-20 transition-all duration-300 ${
+        isOpen ? "lg:left-64" : "lg:left-20"
+      } left-0`}
     >
       {/* Sidebar toggle */}
       <div className="flex items-center gap-3">
