@@ -33,6 +33,7 @@ export default function Topbar({ isOpen, onToggle }) {
   const handleLogout = () => {
     logout(null, {
       onSuccess: () => {
+        document.cookie = "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         queryClient.clear();
         localStorage.removeItem("adminData");
         router.push("/");

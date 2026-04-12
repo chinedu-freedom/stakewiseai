@@ -53,6 +53,7 @@ export default function LoginPage() {
 
     loginMutation.mutate(payload, {
       onSuccess: () => {
+        document.cookie = "isAuthenticated=true; path=/";
         router.push("/admin");
       },
       onError: (error) => {

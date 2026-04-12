@@ -15,8 +15,8 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error?.response?.status === 401 && typeof window !== "undefined") {
-      // Optional: redirect to login on unauthorized
-      // window.location.href = "/";
+      document.cookie = "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      window.location.href = "/";
     }
 
     return Promise.reject(error);
