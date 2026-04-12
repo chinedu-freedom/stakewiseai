@@ -140,14 +140,14 @@ export default function Topbar({ isOpen, onToggle }) {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            className="text-red-600"
+            className="text-red-600 cursor-pointer"
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
-            <Link href="/" className="flex items-center w-full">
+            <div className="flex items-center w-full">
               <LogOut className="w-4 h-4 mr-2" />
               {isLoggingOut ? "Logging out..." : "Logout"}
-            </Link>
+            </div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
