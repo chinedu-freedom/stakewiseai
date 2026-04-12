@@ -2,7 +2,7 @@ import "../globals.css";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 
 export const metadata = {
-  title: "Premium Invest",
+  title: "",
 };
 
 export default function RootLayout({ children }) {

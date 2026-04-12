@@ -47,10 +47,11 @@ export default function Sidebar({ isOpen, isMobileOpen, onCloseMobile }) {
       } ${isOpen ? "lg:w-64" : "lg:w-20"}`}
     >
       <div className="space-y-4 flex flex-col">
-        <div className="h-16 border-b border-gray-100 flex items-center justify-between px-6 lg:justify-center">
+        {/* <div className="h-16 border-b border-gray-100 flex items-center justify-between px-6 lg:justify-center">
           <Link href="/admin" onClick={onCloseMobile}>
             {isOpen || isMobileOpen ? (
               <h1 className="text-xl font-bold">StakeWiseAI</h1>
+          
             ) : (
               <h1 className="text-xl font-bold">SWI</h1>
             )}
@@ -62,7 +63,34 @@ export default function Sidebar({ isOpen, isMobileOpen, onCloseMobile }) {
           >
             <X size={20} className="text-gray-700" />
           </button>
-        </div>
+        </div> */}
+ <div className="h-16 border-b border-gray-100 flex items-center justify-between px-6 lg:justify-center">
+  <Link href="/admin" onClick={onCloseMobile} className="flex items-center gap-2">
+    
+    {(isOpen || isMobileOpen) && <>
+    <img
+      src="/logo.jpeg"
+      alt="StakeWiseAI Logo"
+      className="w-8 h-8 object-contain"
+    />
+      <h1 className="text-xl font-bold text-gray-900 whitespace-nowrap">
+        StakeWiseAI
+      </h1>
+    </> }
+
+    {/* Collapsed mode fallback text */}
+    {!isOpen && !isMobileOpen && (
+      <h1 className="text-xl font-bold text-gray-900">SWI</h1>
+    )}
+  </Link>
+
+  <button
+    onClick={onCloseMobile}
+    className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+  >
+    <X size={20} className="text-gray-700" />
+  </button>
+</div>
 
         <nav className="space-y-2 p-4">
           <TooltipProvider>
