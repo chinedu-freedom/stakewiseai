@@ -260,7 +260,7 @@ export default function UserDetailsPage() {
                     ),
                     "Account Balance": user.accountBalance
                       ? formatCurrency(user.accountBalance)
-                      : "₦0",
+                      : "$0",
                     "Member Since": user.createdAt
                       ? new Date(user.createdAt).toLocaleString("en-GB", {
                           day: "numeric",
@@ -352,7 +352,7 @@ export default function UserDetailsPage() {
                     Current:{" "}
                     {user.accountBalance
                       ? formatCurrency(user.accountBalance)
-                      : "₦0"}
+                      : "$0"}
                   </p>
                 </div>
 

@@ -228,10 +228,10 @@ export default function DepositDetailsPage() {
                     ),
                     "Current Balance": deposit.user?.accountBalance
                       ? formatCurrency(deposit.user.accountBalance)
-                      : "₦0",
+                      : "$0",
                     "Total Profit": deposit.user?.totalProfit
                       ? formatCurrency(deposit.user.totalProfit)
-                      : "₦0",
+                      : "$0",
                     "Member Since": deposit.user?._createdAt
                       ? new Date(deposit?.user?._createdAt).toLocaleDateString(
                           "en-GB"
@@ -440,7 +440,7 @@ export default function DepositDetailsPage() {
                     <span className="text-sm text-gray-900 font-medium">
                       {deposit.user?.accountBalance
                         ? formatCurrency(deposit.user.accountBalance)
-                        : "₦0"}
+                        : "$0"}
                     </span>
                   </div>
                 </div>

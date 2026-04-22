@@ -5,7 +5,7 @@ import {
 
 export const formatCurrency = (amount) => {
   const numAmount = Number(amount);
-  if (isNaN(numAmount)) return "₦0";
+  if (isNaN(numAmount)) return "$0";
   
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
