@@ -7,9 +7,9 @@ export const formatCurrency = (amount) => {
   const numAmount = Number(amount);
   if (isNaN(numAmount)) return "$0";
   
-  return new Intl.NumberFormat("en-NG", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "NGN",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(numAmount);

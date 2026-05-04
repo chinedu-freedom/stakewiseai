@@ -12,7 +12,7 @@ import { useCurrencyFormat } from "@/hooks/use-currency-formatter"
 export default function DashboardPage() {
   const pathname = usePathname();
   const { data } = useFetchData("/api/admin/dashboard-stats");
-  const formatCurrency = useCurrencyFormat("NGN")
+  const formatCurrency = useCurrencyFormat("USD")
 
   const statsData = [
   {

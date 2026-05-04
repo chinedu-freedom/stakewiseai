@@ -10,15 +10,15 @@ function getFormatter(locale, options) {
   return formatterCache.get(key);
 }
 
-export function useCurrencyFormat(defaultCurrency = 'NGN') {
+export function useCurrencyFormat(defaultCurrency = 'USD') {
   const formatCurrency = useMemo(() => {
     return (amount, currency = defaultCurrency, options = {}) => {
       try {
-        const formatter = getFormatter("en-NG", {
+        const formatter = getFormatter("en-US", {
           style: 'currency',
           currency,
           minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
+          maximumFractionDigits: 2,
           ...options,
         });
         return formatter.format(amount);
