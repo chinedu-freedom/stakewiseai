@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePost } from "@/hooks/useApi";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CookieManager } from "@/utils/cookie-utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -52,8 +53,14 @@ export default function LoginPage() {
     };
 
     loginMutation.mutate(payload, {
-      onSuccess: () => {
-        document.cookie = "isAuthenticated=true; path=/";
+      onSuccess: (response) => {
+        const { accessToken } = response.data.data;
+        
+        if (accessToken) {
+          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.04); // 1 day or ~1 hour
+        }
+        
+        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.04);
         router.push("/admin");
       },
       onError: (error) => {

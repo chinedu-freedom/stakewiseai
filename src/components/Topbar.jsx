@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { useImageSrc } from "@/hooks/useImageSrc";
+import { CookieManager } from "@/utils/cookie-utils";
 
 export default function Topbar({ isOpen, onToggle }) {
   const router = useRouter();
@@ -33,7 +34,8 @@ export default function Topbar({ isOpen, onToggle }) {
   const handleLogout = () => {
     logout(null, {
       onSuccess: () => {
-        document.cookie = "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        CookieManager.remove("stakewise-admin-token");
+        CookieManager.remove("isAuthenticated");
         queryClient.clear();
         localStorage.removeItem("adminData");
         router.push("/");
