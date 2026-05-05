@@ -338,7 +338,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
               Confirm Deletion
             </DialogTitle>
           </DialogHeader>
-          <div className="py-4">
+          <div className="">
             <p className="text-sm text-gray-600">
               Are you sure you want to delete{" "}
               <span className="font-semibold">
