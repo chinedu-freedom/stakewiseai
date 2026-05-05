@@ -57,11 +57,15 @@ export default function LoginPage() {
         const { accessToken } = response.data.data;
         
         if (accessToken) {
-          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.04); // 1 day or ~1 hour
+          // Increase session expiry slightly (0.1 days ~ 2.4 hours) for better stability
+          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.1); 
         }
         
-        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.04);
-        router.push("/admin");
+        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.1);
+        
+        // Use window.location.href for the initial redirect to ensure the Server Middleware 
+        // immediately recognizes the new cookies on the next request.
+        window.location.href = "/admin";
       },
       onError: (error) => {
         console.error("Login failed:", error);
