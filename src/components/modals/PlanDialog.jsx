@@ -33,6 +33,7 @@ const planSchema = z.object({
   maxDeposit: z.coerce.number().min(1),
   dailyProfit: z.coerce.number().min(1),
   contractDuration: z.coerce.number().min(1),
+  planLevel: z.coerce.number().min(1, "Plan level is required and must be at least 1"),
   status: z.enum(["active", "inactive"]),
   isFixedDeposit: z.enum(["yes", "no"]),
 });
@@ -57,6 +58,7 @@ export default function PlanDialog({ open, setOpen, initialData }) {
       maxDeposit: 1000,
       dailyProfit: 8,
       contractDuration: 30,
+      planLevel: 1,
       status: "active",
       isFixedDeposit: "no",
     },
@@ -71,6 +73,7 @@ export default function PlanDialog({ open, setOpen, initialData }) {
         maxDeposit: initialData.maxDeposit || 0,
         dailyProfit: initialData.dailyProfit || 0,
         contractDuration: initialData.contractDuration || 0,
+        planLevel: initialData.planLevel || 1,
         status: initialData.status || "active",
         isFixedDeposit: initialData.isFixedDeposit ? "yes" : "no",
       });
@@ -104,6 +107,7 @@ export default function PlanDialog({ open, setOpen, initialData }) {
       maxDeposit: data.maxDeposit,
       dailyProfit: data.dailyProfit,
       contractDuration: data.contractDuration,
+      planLevel: data.planLevel,
       status: data.status,
       isFixedDeposit: data.isFixedDeposit === "yes",
     };
@@ -163,6 +167,16 @@ export default function PlanDialog({ open, setOpen, initialData }) {
           <div>
             <Label>Max Deposit ($)</Label>
             <Input type="number" {...register("maxDeposit")} />
+          </div>
+
+          <div>
+            <Label>Plan Level (1=Basic, 2=Standard, etc.)</Label>
+            <Input type="number" {...register("planLevel")} />
+            {errors.planLevel && (
+              <p className="text-red-500 text-sm">
+                {errors.planLevel.message}
+              </p>
+            )}
           </div>
 
           <div>
