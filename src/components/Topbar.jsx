@@ -34,14 +34,26 @@ export default function Topbar({ isOpen, onToggle }) {
   const handleLogout = () => {
     logout(null, {
       onSuccess: () => {
+        // Clear all authentication data
         CookieManager.remove("stakewise-admin-token");
         CookieManager.remove("isAuthenticated");
+        
+        // Clear query cache and storage
         queryClient.clear();
         localStorage.removeItem("adminData");
-        router.push("/");
+        
+        import("sonner").then(({ toast }) => {
+          toast.success("Logged out successfully");
+        });
+
+        // Use window.location.replace for a clean session reset
+        window.location.replace("/");
       },
-      onError: () => {
-        alert("Logout failed, please try again.");
+      onError: (error) => {
+        console.error("Logout failed:", error);
+        import("sonner").then(({ toast }) => {
+          toast.error("Logout failed. Please try again.");
+        });
       },
     });
   };
