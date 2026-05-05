@@ -1,5 +1,5 @@
-import "../globals.css";
 import SidebarLayout from "@/components/layout/SidebarLayout";
+import AuthGuard from "@/components/AuthGuard";
 
 export const metadata = {
   title: "",
@@ -9,7 +9,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <SidebarLayout>{children}</SidebarLayout>
+        <AuthGuard>
+          <SidebarLayout>{children}</SidebarLayout>
+        </AuthGuard>
       </body>
     </html>
   );

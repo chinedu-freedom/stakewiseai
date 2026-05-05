@@ -5,10 +5,12 @@ export function middleware(req) {
 
   const isAuthenticated = req.cookies.get("isAuthenticated")?.value;
 
-  // Protect admin routes
+  // Protect admin routes (Disabled server-side redirect to allow client-side AuthGuard to handle it)
+  /*
   if (pathname.startsWith("/admin") && !isAuthenticated) {
     return NextResponse.redirect(new URL("/", req.url));
   }
+  */
 
   // Prevent logged-in users from visiting login page
   if (pathname === "/" && isAuthenticated) {
