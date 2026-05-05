@@ -54,19 +54,29 @@ export default function LoginPage() {
 
     loginMutation.mutate(payload, {
       onSuccess: (response) => {
-        const { accessToken } = response.data.data;
+        console.log("Login raw response:", response);
         
-        if (accessToken) {
-          // 0.5 days (~12 hours) provides maximum stability for local and production sessions
-          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
-        }
+        // Extract token with fallbacks for different response structures
+        const accessToken = response?.data?.accessToken || response?.data?.data?.accessToken || response?.accessToken;
         
-        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.5);
-        
-        console.log("Auth success: Cookies set, redirecting...");
+        console.log("Extracted token:", accessToken ? "Token exists (success)" : "Token is MISSING");
 
-        // location.replace is cleaner as it doesn't leave the login page in the back history
-        window.location.replace("/admin");
+        if (accessToken) {
+          // Set cookies with a stable duration
+          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
+          CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.5);
+          
+          console.log("Cookies set. Forcing redirect to /admin...");
+          
+          // Force immediate hard redirect
+          window.location.href = "/admin";
+        } else {
+          console.error("Authentication failed: No access token returned from server.");
+          // Fallback if token is missing but success was true
+          if (response?.success) {
+             console.warn("Server reported success but provided no token. Check backend login controller.");
+          }
+        }
       },
       onError: (error) => {
         console.error("Login failed:", error);
