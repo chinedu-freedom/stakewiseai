@@ -8,7 +8,6 @@ export const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // ✅ REQUIRED for cookies
 });
 
 /* ================= REQUEST INTERCEPTOR ================= */

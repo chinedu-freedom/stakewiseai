@@ -5,7 +5,6 @@ import axiosInstance from "./axiosInstance";
 export const fetchData = async (endpoint, { signal } = {}) => {
   const { data } = await axiosInstance.get(endpoint, {
     signal,
-    withCredentials: true, // ✅ send cookies
   });
 
   return data;
@@ -16,18 +15,7 @@ export const postData = async (
   data,
   { isFormData = false } = {}
 ) => {
-  const config = {
-    withCredentials: true, // ✅ required for auth cookies
-  };
-
-  // Only set JSON header if NOT FormData
-  if (!isFormData) {
-    config.headers = {
-      "Content-Type": "application/json",
-    };
-  }
-
-  const res = await axiosInstance.post(endpoint, data, config);
+  const res = await axiosInstance.post(endpoint, data);
   return res.data;
 };
 
@@ -36,37 +24,22 @@ export const patchData = async (
   data,
   { isFormData = false } = {}
 ) => {
-  const config = {
-    withCredentials: true, // ✅ required
-  };
-
-  if (!isFormData) {
-    config.headers = {
-      "Content-Type": "application/json",
-    };
-  }
-
   const { data: res } = await axiosInstance.patch(
     endpoint,
-    data,
-    config
+    data
   );
 
   return res;
 };
 
 export const updateData = async (endpoint, data) => {
-  const { data: res } = await axiosInstance.put(endpoint, data, {
-    withCredentials: true, // ✅ required
-  });
+  const { data: res } = await axiosInstance.put(endpoint, data);
 
   return res;
 };
 
 export const deleteData = async (endpoint) => {
-  const { data } = await axiosInstance.delete(endpoint, {
-    withCredentials: true, // ✅ required
-  });
+  const { data } = await axiosInstance.delete(endpoint);
 
   return data;
 };
