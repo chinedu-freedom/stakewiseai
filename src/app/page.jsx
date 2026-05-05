@@ -57,15 +57,16 @@ export default function LoginPage() {
         const { accessToken } = response.data.data;
         
         if (accessToken) {
-          // Increase session expiry slightly (0.1 days ~ 2.4 hours) for better stability
-          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.1); 
+          // 0.5 days (~12 hours) provides maximum stability for local and production sessions
+          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
         }
         
-        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.1);
+        CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.5);
         
-        // Use window.location.href for the initial redirect to ensure the Server Middleware 
-        // immediately recognizes the new cookies on the next request.
-        window.location.href = "/admin";
+        console.log("Auth success: Cookies set, redirecting...");
+
+        // location.replace is cleaner as it doesn't leave the login page in the back history
+        window.location.replace("/admin");
       },
       onError: (error) => {
         console.error("Login failed:", error);

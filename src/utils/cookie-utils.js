@@ -3,8 +3,8 @@
 export const CookieManager = {
   set: (name, value, days = 7) => {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    const secure = window.location.protocol === "https:" ? "Secure;" : "";
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax; ${secure}`;
+    // Simplified: Modern browsers handle Lax correctly on localhost without Secure.
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
   },
 
   get: (name) => {
