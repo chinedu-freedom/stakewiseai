@@ -252,6 +252,7 @@ export default function UserDetailsPage() {
                       </div>
                     ),
                     "Phone Number": user.phoneNumber || "—",
+                    "IP Address": user.lastKnownIp || "Unknown",
                     "Referral Code": user.referralCode || "N/A",
                     "Account Status": (
                       <Badge className={getStatusColor(user.accountStatus)}>
