@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import StatCard from "@/components/StatCard";
 import TransactionChart from "@/components/TransactionChart";
-import { DollarSign, Users, Briefcase, ArrowDownRight } from "lucide-react";
+import { DollarSign, Users, Briefcase, ArrowDownRight, Clock, RefreshCw } from "lucide-react";
 import UserActivitiesTable from "@/components/tables/UserActivitiesTable";
 import { useFetchData } from "@/hooks/useApi";
 import { useCurrencyFormat } from "@/hooks/use-currency-formatter"
@@ -34,10 +34,22 @@ export default function DashboardPage() {
     color: "yellow",
   },
   {
+    title: "Pending Deposits",
+    value: formatCurrency(Number(data?.data.totals.pendingDeposits ?? 0)),
+    icon: Clock,
+    color: "orange",
+  },
+  {
     title: "Total Withdrawal",
     value: formatCurrency(Number(data?.data.totals.withdrawals ?? 0)),
     icon: ArrowDownRight,
     color: "blue",
+  },
+  {
+    title: "Pending Withdrawals",
+    value: formatCurrency(Number(data?.data.totals.pendingWithdrawals ?? 0)),
+    icon: RefreshCw,
+    color: "purple",
   },
 ];
 
@@ -52,7 +64,7 @@ export default function DashboardPage() {
     >
       {/* Stat Cards Section */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
