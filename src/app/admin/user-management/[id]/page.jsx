@@ -34,11 +34,14 @@ import {
   CheckCircle,
   XCircle,
   Image as ImageIcon,
+  LogIn,
 } from "lucide-react";
 import { getStatusColor, formatCurrency } from "@/lib/tableHelpers";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useImageSrc } from "@/hooks/useImageSrc";
+import { toast } from "react-hot-toast";
+import axiosInstance from "@/config/axiosInstance";
 
 const accountStatusOptions = [
   { value: "pending", label: "Pending", color: "text-yellow-600" },
@@ -51,6 +54,7 @@ export default function UserDetailsPage() {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
+  const [isImpersonating, setIsImpersonating] = useState(false);
 
   const { data, isLoading } = useFetchData(`/api/users/${id}`, [`users`, id]);
   const user = data?.data;
@@ -100,6 +104,26 @@ export default function UserDetailsPage() {
     // Reset to current user values instead of empty
     setSelectedStatus(user?.accountStatus || "");
     setAccountBalance(user?.accountBalance?.toString() || "");
+  };
+
+  const handleImpersonate = async () => {
+    setIsImpersonating(true);
+    try {
+      const response = await axiosInstance.post(`/api/users/${id}/impersonate`);
+      if (response.data.success) {
+        const token = response.data.data.token;
+        // Open the user dashboard in a new tab and pass the token via URL parameter
+        window.open(`https://stakewiseai.vip/index.html?impersonate_token=${token}`, '_blank');
+        toast.success("Logging in as user...");
+      } else {
+        toast.error("Failed to generate login token");
+      }
+    } catch (error) {
+      console.error("Error impersonating user:", error);
+      toast.error("An error occurred during impersonation");
+    } finally {
+      setIsImpersonating(false);
+    }
   };
 
   if (isLoading) {
@@ -173,6 +197,19 @@ export default function UserDetailsPage() {
           >
             {user.accountStatus?.toUpperCase() || "UNKNOWN"}
           </Badge>
+          
+          <Button 
+            onClick={handleImpersonate} 
+            disabled={isImpersonating}
+            className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2 mt-2 sm:mt-0"
+          >
+            {isImpersonating ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <LogIn className="w-4 h-4" />
+            )}
+            Login as User
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
