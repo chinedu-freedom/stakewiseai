@@ -61,7 +61,7 @@ export default function AccessLogsTable({ userId }) {
   // Skeleton loader
   const TableRowSkeleton = () => (
     <TableRow>
-      {Array(4)
+      {Array(3)
         .fill(0)
         .map((_, i) => (
           <TableCell key={i}>
