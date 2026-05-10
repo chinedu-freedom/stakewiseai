@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import KeyValueList from "@/components/KeyValueList";
+import AccessLogsTable from "@/components/tables/AccessLogsTable";
 import {
   ArrowLeft,
   Eye,
@@ -445,6 +446,11 @@ export default function UserDetailsPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+        
+        {/* Access Logs Table */}
+        <div className="mt-8">
+          <AccessLogsTable userId={id} />
         </div>
       </div>
     </div>
