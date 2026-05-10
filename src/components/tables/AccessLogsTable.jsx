@@ -95,7 +95,6 @@ export default function AccessLogsTable({ userId }) {
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead className="w-[200px]">Last Access</TableHead>
-                <TableHead className="w-[150px]">Action</TableHead>
                 <TableHead className="w-[150px]">IP Address</TableHead>
                 <TableHead className="min-w-[300px]">Browser (User Agent)</TableHead>
               </TableRow>
@@ -128,11 +127,7 @@ export default function AccessLogsTable({ userId }) {
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <Badge variant="outline" className="font-normal bg-gray-50">
-                        {a.action}
-                      </Badge>
-                    </TableCell>
+                    
                     
                     <TableCell>
                       <span className="font-mono text-xs bg-slate-100 px-2 py-1 rounded">
