@@ -57,7 +57,7 @@ export default function DashboardPage() {
       amount: formatCurrency(Number(data?.data.totals.pendingWithdrawals ?? 0)),
       label: "Awaiting processing",
       color: "purple",
-      href: "/admin/transactions",
+      href: "/admin/transactions?tab=withdrawals",
     },
   ];
 
