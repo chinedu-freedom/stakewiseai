@@ -48,6 +48,7 @@ export default function DashboardPage() {
       count: data?.data.totals.pendingDepositsCount ?? 0,
       amount: formatCurrency(Number(data?.data.totals.pendingDeposits ?? 0)),
       label: "Awaiting approval",
+      color: "orange",
       href: "/admin/transactions",
     },
     {
@@ -55,6 +56,7 @@ export default function DashboardPage() {
       count: data?.data.totals.pendingWithdrawalsCount ?? 0,
       amount: formatCurrency(Number(data?.data.totals.pendingWithdrawals ?? 0)),
       label: "Awaiting processing",
+      color: "purple",
       href: "/admin/transactions",
     },
   ];
