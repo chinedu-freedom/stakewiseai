@@ -113,7 +113,7 @@ export default function UserDetailsPage() {
       if (response.data.success) {
         const token = response.data.data.token;
         // Open the user dashboard in a new tab and pass the token via URL parameter
-        window.open(`https://stakewiseai.vip/index.html?impersonate_token=${token}`, '_blank');
+        window.open(`https://satrixai.com/index.html?impersonate_token=${token}`, '_blank');
         toast.success("Logging in as user...");
       } else {
         toast.error("Failed to generate login token");

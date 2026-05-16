@@ -3,7 +3,7 @@ import ConfigLayout from "./config-layout";
 
 
 export const metadata = {
-  title: "StakeWiseAI",
+  title: "SatrixNow",
 };
 
 export default function RootLayout({ children }) {

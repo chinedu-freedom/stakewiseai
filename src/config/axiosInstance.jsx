@@ -14,7 +14,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
-      const token = CookieManager.get("stakewise-admin-token");
+      const token = CookieManager.get("satrixnow-admin-token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error?.response?.status === 401 && typeof window !== "undefined") {
       // Clear all auth-related cookies
-      CookieManager.remove("stakewise-admin-token");
+      CookieManager.remove("satrixnow-admin-token");
       CookieManager.remove("isAuthenticated");
       
       // Redirect to login

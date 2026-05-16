@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, isMobileOpen, onCloseMobile }) {
         {/* <div className="h-16 border-b border-gray-100 flex items-center justify-between px-6 lg:justify-center">
           <Link href="/admin" onClick={onCloseMobile}>
             {isOpen || isMobileOpen ? (
-              <h1 className="text-xl font-bold">StakeWiseAI</h1>
+              <h1 className="text-xl font-bold">SatrixNow</h1>
           
             ) : (
               <h1 className="text-xl font-bold">SWI</h1>
@@ -70,11 +70,11 @@ export default function Sidebar({ isOpen, isMobileOpen, onCloseMobile }) {
     {(isOpen || isMobileOpen) && <>
     <img
       src="/logo.jpeg"
-      alt="StakeWiseAI Logo"
+      alt="SatrixNow Logo"
       className="w-8 h-8 object-contain"
     />
       <h1 className="text-xl font-bold text-gray-900 whitespace-nowrap">
-        StakeWiseAI
+        SatrixNow
       </h1>
     </> }
 

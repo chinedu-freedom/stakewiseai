@@ -63,7 +63,7 @@ export default function LoginPage() {
 
         if (accessToken) {
           // Set cookies with a stable duration
-          CookieManager.set("stakewise-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
+          CookieManager.set("satrixnow-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
           CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.5);
           
           console.log("Cookies set. Forcing redirect to /admin...");

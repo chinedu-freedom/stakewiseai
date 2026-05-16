@@ -35,7 +35,7 @@ export default function Topbar({ isOpen, onToggle }) {
     logout(null, {
       onSuccess: () => {
         // Clear all authentication data
-        CookieManager.remove("stakewise-admin-token");
+        CookieManager.remove("satrixnow-admin-token");
         CookieManager.remove("isAuthenticated");
         
         // Clear query cache and storage
