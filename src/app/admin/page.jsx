@@ -120,7 +120,7 @@ export default function DashboardPage() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut", delay: 0.4 }}
       >
-        <TransactionChart />
+        <TransactionChart data={data?.data?.chartData} />
       </motion.div>
       {/* User Activities Table Section */}
 
