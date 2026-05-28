@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -50,9 +50,13 @@ export default function DepositTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/deposits?page=${page}&limit=${limit}`,
-    ["deposits", page]
+    `/api/deposits?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
+    ["deposits", page, searchTerm]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
   const deleteDeposit = useDelete(
     (id) => `/api/deposits/${id}`,
@@ -98,23 +102,7 @@ export default function DepositTable({ searchTerm = "" }) {
     prevPage: pagination.prevPage,
   };
 
-  const filteredData = useMemo(() => {
-    const list = !searchTerm.trim()
-      ? deposits
-      : deposits.filter((dep) =>
-          [dep.user?.username, dep._id, dep.user?._id, dep.crypto]
-            .filter(Boolean)
-            .some((val) =>
-              val.toString().toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
-
-    return [...list].sort(
-      (a, b) =>
-        new Date(b.fundedAt || b.createdAt || 0) -
-        new Date(a.fundedAt || a.createdAt || 0)
-    );
-  }, [deposits, searchTerm]);
+  const filteredData = deposits;
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {

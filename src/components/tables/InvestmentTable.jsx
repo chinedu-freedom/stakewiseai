@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -50,9 +50,13 @@ export default function InvestmentTable({ searchTerm = "" }) {
 
   // Fetch all investments (unified endpoint)
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/admin/user-investments?page=${page}&limit=${limit}`,
-    ["user-investments", page]
+    `/api/admin/user-investments?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
+    ["user-investments", page, searchTerm]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
   if (error) {
     return (
@@ -71,15 +75,7 @@ export default function InvestmentTable({ searchTerm = "" }) {
   const investments = data?.data?.records || [];
   const meta = data?.data?.pagination || {};
 
-  const filteredData = useMemo(() => {
-    return filterAndSortData(
-      investments,
-      searchTerm,
-      ["_id", "user._id", "user.username", "plan.title"],
-      "createdAt",
-      "desc"
-    );
-  }, [investments, searchTerm]);
+  const filteredData = investments;
 
   const handleDeleteClick = (investment) => {
     setIsDeleteOpen(true);

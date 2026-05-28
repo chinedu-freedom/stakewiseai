@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -53,9 +53,13 @@ export default function PlansTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/plans?page=${page}&limit=${limit}`,
-    ["plans", page]
+    `/api/plans?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
+    ["plans", page, searchTerm]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
   if (error) {
     return (
@@ -74,15 +78,7 @@ export default function PlansTable({ searchTerm = "" }) {
   const plans = data?.data || [];
   const meta = data?.meta ?? {};
 
-  const filteredData = useMemo(() => {
-    return filterAndSortData(
-      plans,
-      searchTerm,
-      ["title"],
-      "createdAt",
-      "desc"
-    );
-  }, [plans, searchTerm]);
+  const filteredData = plans;
 
   const handleDeleteClick = (plan) => {
     setPlanToDelete(plan);

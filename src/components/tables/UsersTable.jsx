@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -49,9 +49,13 @@ export default function UsersTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/users?page=${page}&limit=${limit}`,
-    ["users", page]
+    `/api/users?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
+    ["users", page, searchTerm]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
   if (error) {
     return (
@@ -70,14 +74,8 @@ export default function UsersTable({ searchTerm = "" }) {
   const users = data?.data?.records || [];
   const meta = data?.data?.pagination ?? {};
 
-  const filteredData = useMemo(() => {
-    return filterAndSortData(users, searchTerm, [
-      "_id",
-      "username",
-      "email",
-      "phoneNumber",
-    ]);
-  }, [users, searchTerm]);
+  // Use the data directly since the backend now handles the filtering and sorting
+  const filteredData = users;
 
   const handleDeleteClick = (user) => {
     setUserToDelete(user);

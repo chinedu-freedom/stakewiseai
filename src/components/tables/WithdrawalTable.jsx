@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -50,9 +50,13 @@ export default function WithdrawalTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/withdrawals?page=${page}&limit=${limit}`,
-    ["withdrawals", page],
+    `/api/withdrawals?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
+    ["withdrawals", page, searchTerm]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
   const deleteWithdrawal = useDelete(
     (id) => `/api/withdrawals/${id}`,
@@ -97,21 +101,7 @@ export default function WithdrawalTable({ searchTerm = "" }) {
     prevPage: pagination.prevPage,
   };
 
-  const filteredData = useMemo(() => {
-    const list = !searchTerm.trim()
-      ? transactions
-      : transactions.filter((txn) =>
-          [txn.user?.username, txn._id]
-            .filter(Boolean)
-            .some((val) =>
-              val.toLowerCase().includes(searchTerm.toLowerCase()),
-            ),
-        );
-
-    return list.sort(
-      (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt),
-    );
-  }, [transactions, searchTerm]);
+  const filteredData = transactions;
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
