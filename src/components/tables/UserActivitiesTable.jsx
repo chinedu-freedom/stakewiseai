@@ -59,7 +59,7 @@ export default function UserActivitiesTable() {
   // Skeleton loader
   const TableRowSkeleton = () => (
     <TableRow>
-      {Array(4)
+      {Array(5)
         .fill(0)
         .map((_, i) => (
           <TableCell key={i}>
@@ -92,16 +92,19 @@ export default function UserActivitiesTable() {
           <TableHeader>
             <TableRow className="bg-gray-50">
               <TableHead className="w-[200px]">
-                Date & Time
+                Username
               </TableHead>
-              <TableHead className="w-[250px]">
+              <TableHead className="w-[200px]">
                 Activity
               </TableHead>
               <TableHead className="w-[120px]">
                 Status
               </TableHead>
-              <TableHead className="min-w-[400px]">
+              <TableHead className="min-w-[300px]">
                 Details
+              </TableHead>
+              <TableHead className="w-[200px] text-right">
+                Date & Time
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -114,7 +117,19 @@ export default function UserActivitiesTable() {
             ) : filteredActivities.length > 0 ? (
               filteredActivities.map((a) => (
                 <TableRow key={a._id}>
-                  <TableCell className="whitespace-nowrap">
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {a.user?.username || "Unknown"}
+                  </TableCell>
+                  <TableCell>{a.action}</TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(a.status)}>
+                      {a.status?.charAt(0).toUpperCase() + a.status?.slice(1)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-gray-600 break-words max-w-[300px]">
+                    {a.details}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right">
                     {new Date(a.timestamp).toLocaleDateString("en-US", {
                       month: "short",
                       day: "2-digit",
@@ -127,22 +142,12 @@ export default function UserActivitiesTable() {
                         hour12: true,
                       })}
                   </TableCell>
-
-                  <TableCell>{a.action}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(a.status)}>
-                      {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-gray-600 break-words max-w-[400px]">
-                    {a.details}
-                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className="text-center text-gray-500 py-6"
                 >
                   <div className="flex flex-col items-center gap-2">
