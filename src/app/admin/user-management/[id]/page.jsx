@@ -53,7 +53,8 @@ export default function UserDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [accountBalance, setAccountBalance] = useState("");
+  const [adjustmentAmount, setAdjustmentAmount] = useState("");
+  const [adjustmentType, setAdjustmentType] = useState("add");
   const [isImpersonating, setIsImpersonating] = useState(false);
 
   const { data, isLoading } = useFetchData(`/api/users/${id}`, [`users`, id]);
@@ -67,43 +68,42 @@ export default function UserDetailsPage() {
   useEffect(() => {
     if (user) {
       setSelectedStatus(user.accountStatus || "");
-      setAccountBalance(user.accountBalance?.toString() || "");
+      setAdjustmentAmount("");
+      setAdjustmentType("add");
     }
   }, [user]);
 
   const handleUpdateUser = async () => {
-    if (!selectedStatus && !accountBalance) {
-      return;
-    }
-
-    // Check if anything actually changed
     const statusChanged = selectedStatus !== user.accountStatus;
-    const balanceChanged =
-      accountBalance !== (user.accountBalance?.toString() || "");
+    const balanceAdjustmentValue = parseFloat(adjustmentAmount);
+    const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
 
-    if (!statusChanged && !balanceChanged) {
+    if (!statusChanged && !hasBalanceAdjustment) {
       return;
     }
 
     try {
       const updateData = {};
       if (statusChanged) updateData.accountStatus = selectedStatus;
-      if (balanceChanged)
-        updateData.accountBalance = parseFloat(accountBalance);
+      if (hasBalanceAdjustment) {
+        updateData.accountBalance = adjustmentType === "add" ? balanceAdjustmentValue : -balanceAdjustmentValue;
+      }
 
       await updateUser.mutateAsync({
         id: id,
         data: updateData,
       });
+      // Clear adjustment amount after success
+      setAdjustmentAmount("");
     } catch (error) {
       console.error("Update error:", error);
     }
   };
 
   const handleClear = () => {
-    // Reset to current user values instead of empty
     setSelectedStatus(user?.accountStatus || "");
-    setAccountBalance(user?.accountBalance?.toString() || "");
+    setAdjustmentAmount("");
+    setAdjustmentType("add");
   };
 
   const handleImpersonate = async () => {
@@ -160,9 +160,9 @@ export default function UserDetailsPage() {
   }
 
   const isSubmitting = updateUser.isPending;
-  const hasChanges =
-    selectedStatus !== user.accountStatus ||
-    accountBalance !== (user.accountBalance?.toString() || "");
+  const balanceAdjustmentValue = parseFloat(adjustmentAmount);
+  const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
+  const hasChanges = selectedStatus !== user.accountStatus || hasBalanceAdjustment;
 
   // Check if user has an image
   const hasImage = user?.image && Object.keys(user.image).length > 0;
@@ -375,24 +375,39 @@ export default function UserDetailsPage() {
                 {/* Account Deposit Update */}
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-gray-700">
-                    Account Balance
+                    Adjust Account Balance
                   </label>
-                  <div className="relative">
-                    <Input
-                      type="number"
-                      placeholder="Enter amount..."
-                      value={accountBalance}
-                      onChange={(e) => setAccountBalance(e.target.value)}
-                      min="0"
-                      step="1"
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    Current:{" "}
+                  <p className="text-xs text-gray-500 mb-2">
+                    Current Balance:{" "}
+                    <span className="font-bold text-gray-900">
                     {user.accountBalance
                       ? formatCurrency(user.accountBalance)
                       : "$0"}
+                    </span>
                   </p>
+                  <div className="flex gap-2">
+                    <Select
+                      value={adjustmentType}
+                      onValueChange={setAdjustmentType}
+                    >
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Action" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="add">Add (+)</SelectItem>
+                        <SelectItem value="subtract">Subtract (-)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="number"
+                      placeholder="Amount..."
+                      value={adjustmentAmount}
+                      onChange={(e) => setAdjustmentAmount(e.target.value)}
+                      min="0"
+                      step="0.01"
+                      className="flex-1"
+                    />
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
