@@ -55,6 +55,8 @@ export default function UserDetailsPage() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [adjustmentAmount, setAdjustmentAmount] = useState("");
   const [adjustmentType, setAdjustmentType] = useState("add");
+  const [profitAdjustmentAmount, setProfitAdjustmentAmount] = useState("");
+  const [profitAdjustmentType, setProfitAdjustmentType] = useState("add");
   const [isImpersonating, setIsImpersonating] = useState(false);
 
   const { data, isLoading } = useFetchData(`/api/users/${id}`, [`users`, id]);
@@ -70,6 +72,8 @@ export default function UserDetailsPage() {
       setSelectedStatus(user.accountStatus || "");
       setAdjustmentAmount("");
       setAdjustmentType("add");
+      setProfitAdjustmentAmount("");
+      setProfitAdjustmentType("add");
     }
   }, [user]);
 
@@ -77,8 +81,10 @@ export default function UserDetailsPage() {
     const statusChanged = selectedStatus !== user.accountStatus;
     const balanceAdjustmentValue = parseFloat(adjustmentAmount);
     const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
+    const profitAdjustmentValue = parseFloat(profitAdjustmentAmount);
+    const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && profitAdjustmentValue > 0;
 
-    if (!statusChanged && !hasBalanceAdjustment) {
+    if (!statusChanged && !hasBalanceAdjustment && !hasProfitAdjustment) {
       return;
     }
 
@@ -88,6 +94,9 @@ export default function UserDetailsPage() {
       if (hasBalanceAdjustment) {
         updateData.accountBalance = adjustmentType === "add" ? balanceAdjustmentValue : -balanceAdjustmentValue;
       }
+      if (hasProfitAdjustment) {
+        updateData.totalProfit = profitAdjustmentType === "add" ? profitAdjustmentValue : -profitAdjustmentValue;
+      }
 
       await updateUser.mutateAsync({
         id: id,
@@ -95,6 +104,7 @@ export default function UserDetailsPage() {
       });
       // Clear adjustment amount after success
       setAdjustmentAmount("");
+      setProfitAdjustmentAmount("");
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -104,6 +114,8 @@ export default function UserDetailsPage() {
     setSelectedStatus(user?.accountStatus || "");
     setAdjustmentAmount("");
     setAdjustmentType("add");
+    setProfitAdjustmentAmount("");
+    setProfitAdjustmentType("add");
   };
 
   const handleImpersonate = async () => {
@@ -162,7 +174,9 @@ export default function UserDetailsPage() {
   const isSubmitting = updateUser.isPending;
   const balanceAdjustmentValue = parseFloat(adjustmentAmount);
   const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
-  const hasChanges = selectedStatus !== user.accountStatus || hasBalanceAdjustment;
+  const profitAdjustmentValue = parseFloat(profitAdjustmentAmount);
+  const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && profitAdjustmentValue > 0;
+  const hasChanges = selectedStatus !== user.accountStatus || hasBalanceAdjustment || hasProfitAdjustment;
 
   // Check if user has an image
   const hasImage = user?.image && Object.keys(user.image).length > 0;
@@ -300,6 +314,12 @@ export default function UserDetailsPage() {
                     "Account Balance": user.accountBalance
                       ? formatCurrency(user.accountBalance)
                       : "$0",
+                    "Total Profit": user.totalProfit
+                      ? formatCurrency(user.totalProfit)
+                      : "$0",
+                    "Available Profit": user.availableProfit
+                      ? formatCurrency(user.availableProfit)
+                      : "$0",
                     "Member Since": user.createdAt
                       ? new Date(user.createdAt).toLocaleString("en-GB", {
                           day: "numeric",
@@ -403,6 +423,44 @@ export default function UserDetailsPage() {
                       placeholder="Amount..."
                       value={adjustmentAmount}
                       onChange={(e) => setAdjustmentAmount(e.target.value)}
+                      min="0"
+                      step="0.01"
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                {/* Profit Deposit Update */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-gray-700">
+                    Adjust Total Profit
+                  </label>
+                  <p className="text-xs text-gray-500 mb-2">
+                    Current Profit:{" "}
+                    <span className="font-bold text-gray-900">
+                    {user.totalProfit
+                      ? formatCurrency(user.totalProfit)
+                      : "$0"}
+                    </span>
+                  </p>
+                  <div className="flex gap-2">
+                    <Select
+                      value={profitAdjustmentType}
+                      onValueChange={setProfitAdjustmentType}
+                    >
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Action" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="add">Add (+)</SelectItem>
+                        <SelectItem value="subtract">Subtract (-)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="number"
+                      placeholder="Amount..."
+                      value={profitAdjustmentAmount}
+                      onChange={(e) => setProfitAdjustmentAmount(e.target.value)}
                       min="0"
                       step="0.01"
                       className="flex-1"
