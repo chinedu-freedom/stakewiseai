@@ -80,9 +80,9 @@ export default function UserDetailsPage() {
   const handleUpdateUser = async () => {
     const statusChanged = selectedStatus !== user.accountStatus;
     const balanceAdjustmentValue = parseFloat(adjustmentAmount);
-    const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
+    const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && (balanceAdjustmentValue > 0 || (adjustmentType === "set" && balanceAdjustmentValue === 0));
     const profitAdjustmentValue = parseFloat(profitAdjustmentAmount);
-    const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && profitAdjustmentValue > 0;
+    const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && (profitAdjustmentValue > 0 || (profitAdjustmentType === "set" && profitAdjustmentValue === 0));
 
     if (!statusChanged && !hasBalanceAdjustment && !hasProfitAdjustment) {
       return;
@@ -92,10 +92,12 @@ export default function UserDetailsPage() {
       const updateData = {};
       if (statusChanged) updateData.accountStatus = selectedStatus;
       if (hasBalanceAdjustment) {
-        updateData.accountBalance = adjustmentType === "add" ? balanceAdjustmentValue : -balanceAdjustmentValue;
+        updateData.accountBalance = balanceAdjustmentValue;
+        updateData.balanceAction = adjustmentType;
       }
       if (hasProfitAdjustment) {
-        updateData.totalProfit = profitAdjustmentType === "add" ? profitAdjustmentValue : -profitAdjustmentValue;
+        updateData.totalProfit = profitAdjustmentValue;
+        updateData.profitAction = profitAdjustmentType;
       }
 
       await updateUser.mutateAsync({
@@ -173,9 +175,9 @@ export default function UserDetailsPage() {
 
   const isSubmitting = updateUser.isPending;
   const balanceAdjustmentValue = parseFloat(adjustmentAmount);
-  const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && balanceAdjustmentValue > 0;
+  const hasBalanceAdjustment = !isNaN(balanceAdjustmentValue) && (balanceAdjustmentValue > 0 || (adjustmentType === "set" && balanceAdjustmentValue === 0));
   const profitAdjustmentValue = parseFloat(profitAdjustmentAmount);
-  const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && profitAdjustmentValue > 0;
+  const hasProfitAdjustment = !isNaN(profitAdjustmentValue) && (profitAdjustmentValue > 0 || (profitAdjustmentType === "set" && profitAdjustmentValue === 0));
   const hasChanges = selectedStatus !== user.accountStatus || hasBalanceAdjustment || hasProfitAdjustment;
 
   // Check if user has an image
@@ -416,6 +418,7 @@ export default function UserDetailsPage() {
                       <SelectContent>
                         <SelectItem value="add">Add (+)</SelectItem>
                         <SelectItem value="subtract">Subtract (-)</SelectItem>
+                        <SelectItem value="set">Set (=)</SelectItem>
                       </SelectContent>
                     </Select>
                     <Input
@@ -454,6 +457,7 @@ export default function UserDetailsPage() {
                       <SelectContent>
                         <SelectItem value="add">Add (+)</SelectItem>
                         <SelectItem value="subtract">Subtract (-)</SelectItem>
+                        <SelectItem value="set">Set (=)</SelectItem>
                       </SelectContent>
                     </Select>
                     <Input
