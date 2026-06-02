@@ -12,6 +12,8 @@ import {
 import { postData } from "@/config/apiHelpers";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +53,7 @@ export default function UsersTable({ searchTerm = "" }) {
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [userToReset, setUserToReset] = useState(null);
   const [isResetting, setIsResetting] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   const limit = 10;
 
@@ -113,15 +116,21 @@ export default function UsersTable({ searchTerm = "" }) {
 
   const handleResetClick = (user) => {
     setUserToReset(user);
+    setNewPassword("");
     setIsResetOpen(true);
     setOpenMenuId(null);
   };
 
   const handleConfirmReset = async () => {
     if (!userToReset?._id) return;
+    if (!newPassword.trim()) {
+      toast.error("Please enter a new password");
+      return;
+    }
+
     try {
       setIsResetting(true);
-      const res = await postData(`/api/users/${userToReset._id}/reset-password`, {});
+      const res = await postData(`/api/users/${userToReset._id}/reset-password`, { newPassword });
       if (res?.success) {
         toast.success(res.message || "Password reset successfully");
       } else {
@@ -292,12 +301,23 @@ export default function UsersTable({ searchTerm = "" }) {
           </DialogHeader>
 
           <p className="text-sm text-gray-600">
-            Are you sure you want to reset the password for{" "}
+            You are about to reset the password for{" "}
             <span className="font-semibold">
               {userToReset?.username || "this user"}
-            </span>
-            ? A new random password will be generated and emailed to them.
+            </span>.
+            Please enter the new password below. It will be emailed to them automatically.
           </p>
+
+          <div className="grid gap-2 py-4">
+            <Label htmlFor="new-password">New Password</Label>
+            <Input
+              id="new-password"
+              placeholder="Enter new password (e.g. User@123)"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="off"
+            />
+          </div>
 
           <DialogFooter>
             <DialogClose asChild>
