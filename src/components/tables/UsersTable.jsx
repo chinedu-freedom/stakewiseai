@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { postData } from "@/config/apiHelpers";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,7 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Trash2, Loader2, Eye } from "lucide-react";
+import { MoreHorizontal, Trash2, Loader2, Eye, KeyRound } from "lucide-react";
 import { useFetchData, useDelete } from "@/hooks/useApi";
 import Pagination from "@/components/Pagination";
 import {
@@ -45,6 +47,10 @@ export default function UsersTable({ searchTerm = "" }) {
   const [userToDelete, setUserToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
+
+  const [isResetOpen, setIsResetOpen] = useState(false);
+  const [userToReset, setUserToReset] = useState(null);
+  const [isResetting, setIsResetting] = useState(false);
 
   const limit = 10;
 
@@ -102,6 +108,31 @@ export default function UsersTable({ searchTerm = "" }) {
       setUserToDelete(null);
     } catch {
       setIsDeleting(false);
+    }
+  };
+
+  const handleResetClick = (user) => {
+    setUserToReset(user);
+    setIsResetOpen(true);
+    setOpenMenuId(null);
+  };
+
+  const handleConfirmReset = async () => {
+    if (!userToReset?._id) return;
+    try {
+      setIsResetting(true);
+      const res = await postData(`/api/users/${userToReset._id}/reset-password`, {});
+      if (res?.success) {
+        toast.success(res.message || "Password reset successfully");
+      } else {
+        toast.error(res?.message || "Failed to reset password");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Failed to reset password");
+    } finally {
+      setIsResetting(false);
+      setIsResetOpen(false);
+      setUserToReset(null);
     }
   };
 
@@ -178,6 +209,14 @@ export default function UsersTable({ searchTerm = "" }) {
                           View Details
                         </DropdownMenuItem>
 
+                        {/* RESET PASSWORD */}
+                        <DropdownMenuItem
+                          onClick={() => handleResetClick(user)}
+                        >
+                          <KeyRound className="w-4 h-4 mr-2" />
+                          Reset Password
+                        </DropdownMenuItem>
+
                         {/* DELETE */}
                         <DropdownMenuItem
                           className="text-destructive cursor-pointer"
@@ -239,6 +278,45 @@ export default function UsersTable({ searchTerm = "" }) {
                 </>
               ) : (
                 "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* RESET PASSWORD MODAL */}
+      <Dialog open={isResetOpen} onOpenChange={setIsResetOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reset Password</DialogTitle>
+          </DialogHeader>
+
+          <p className="text-sm text-gray-600">
+            Are you sure you want to reset the password for{" "}
+            <span className="font-semibold">
+              {userToReset?.username || "this user"}
+            </span>
+            ? A new random password will be generated and emailed to them.
+          </p>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isResetting}>
+                Cancel
+              </Button>
+            </DialogClose>
+
+            <Button
+              disabled={isResetting}
+              onClick={handleConfirmReset}
+            >
+              {isResetting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Resetting
+                </>
+              ) : (
+                "Reset Password"
               )}
             </Button>
           </DialogFooter>
