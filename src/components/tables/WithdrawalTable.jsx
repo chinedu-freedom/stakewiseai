@@ -39,7 +39,7 @@ import { useFetchData, useDelete, usePatch } from "@/hooks/useApi";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/Pagination";
 
-export default function WithdrawalTable({ searchTerm = "" }) {
+export default function WithdrawalTable({ searchTerm = "", statusFilter = "all" }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -50,13 +50,13 @@ export default function WithdrawalTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/withdrawals?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
-    ["withdrawals", page, searchTerm]
+    `/api/withdrawals?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}${statusFilter !== "all" ? `&status=${encodeURIComponent(statusFilter)}` : ""}`,
+    ["withdrawals", page, searchTerm, statusFilter]
   );
 
   useEffect(() => {
     setPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, statusFilter]);
 
   const deleteWithdrawal = useDelete(
     (id) => `/api/withdrawals/${id}`,

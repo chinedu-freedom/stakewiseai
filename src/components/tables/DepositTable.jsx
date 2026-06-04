@@ -39,7 +39,7 @@ import { useFetchData, useDelete, usePatch } from "@/hooks/useApi";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/Pagination";
 
-export default function DepositTable({ searchTerm = "" }) {
+export default function DepositTable({ searchTerm = "", statusFilter = "all" }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [depositToDelete, setDepositToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -50,13 +50,13 @@ export default function DepositTable({ searchTerm = "" }) {
   const limit = 10;
 
   const { data, isLoading, refetch, error } = useFetchData(
-    `/api/deposits?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}`,
-    ["deposits", page, searchTerm]
+    `/api/deposits?page=${page}&limit=${limit}${searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : ""}${statusFilter !== "all" ? `&status=${encodeURIComponent(statusFilter)}` : ""}`,
+    ["deposits", page, searchTerm, statusFilter]
   );
 
   useEffect(() => {
     setPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, statusFilter]);
 
   const deleteDeposit = useDelete(
     (id) => `/api/deposits/${id}`,
