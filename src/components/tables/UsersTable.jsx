@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { postData } from "@/config/apiHelpers";
+import { postData, patchData } from "@/config/apiHelpers";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Trash2, Loader2, Eye, KeyRound } from "lucide-react";
+import { MoreHorizontal, Trash2, Loader2, Eye, KeyRound, Mail } from "lucide-react";
 import { useFetchData, useDelete } from "@/hooks/useApi";
 import Pagination from "@/components/Pagination";
 import {
@@ -54,6 +54,11 @@ export default function UsersTable({ searchTerm = "" }) {
   const [userToReset, setUserToReset] = useState(null);
   const [isResetting, setIsResetting] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+
+  const [isEditEmailOpen, setIsEditEmailOpen] = useState(false);
+  const [userToEditEmail, setUserToEditEmail] = useState(null);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
 
   const limit = 10;
 
@@ -145,6 +150,38 @@ export default function UsersTable({ searchTerm = "" }) {
     }
   };
 
+  const handleEditEmailClick = (user) => {
+    setUserToEditEmail(user);
+    setNewEmail(user.email || "");
+    setIsEditEmailOpen(true);
+    setOpenMenuId(null);
+  };
+
+  const handleConfirmEditEmail = async () => {
+    if (!userToEditEmail?._id) return;
+    if (!newEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setIsEditingEmail(true);
+      const res = await patchData(`/api/users/${userToEditEmail._id}`, { email: newEmail.trim() });
+      if (res?.success) {
+        toast.success(res.message || "Email updated successfully");
+        refetch();
+      } else {
+        toast.error(res?.message || "Failed to update email");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Failed to update email");
+    } finally {
+      setIsEditingEmail(false);
+      setIsEditEmailOpen(false);
+      setUserToEditEmail(null);
+    }
+  };
+
   return (
     <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -216,6 +253,14 @@ export default function UsersTable({ searchTerm = "" }) {
                         >
                           <Eye className="w-4 h-4 mr-2" />
                           View Details
+                        </DropdownMenuItem>
+
+                        {/* EDIT EMAIL */}
+                        <DropdownMenuItem
+                          onClick={() => handleEditEmailClick(user)}
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          Edit Email
                         </DropdownMenuItem>
 
                         {/* RESET PASSWORD */}
@@ -337,6 +382,56 @@ export default function UsersTable({ searchTerm = "" }) {
                 </>
               ) : (
                 "Reset Password"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* EDIT EMAIL MODAL */}
+      <Dialog open={isEditEmailOpen} onOpenChange={setIsEditEmailOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Email</DialogTitle>
+          </DialogHeader>
+
+          <p className="text-sm text-gray-600">
+            You are about to edit the email for{" "}
+            <span className="font-semibold">
+              {userToEditEmail?.username || "this user"}
+            </span>.
+          </p>
+
+          <div className="grid gap-2 py-4">
+            <Label htmlFor="new-email">New Email</Label>
+            <Input
+              id="new-email"
+              type="email"
+              placeholder="Enter new email address"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              autoComplete="off"
+            />
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isEditingEmail}>
+                Cancel
+              </Button>
+            </DialogClose>
+
+            <Button
+              disabled={isEditingEmail}
+              onClick={handleConfirmEditEmail}
+            >
+              {isEditingEmail ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving
+                </>
+              ) : (
+                "Save Changes"
               )}
             </Button>
           </DialogFooter>
