@@ -38,7 +38,6 @@ export const signupSchema = z
       .regex(/[0-9]/, "Password must include at least one number")
       .regex(/[^A-Za-z0-9]/, "Password must include at least one special character"),
     confirmPassword: z.string(),
-    adminSecret: z.string()
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],

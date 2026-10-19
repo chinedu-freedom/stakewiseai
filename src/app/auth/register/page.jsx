@@ -24,7 +24,6 @@ export default function SignupPage() {
       phoneNumber: "",
       password: "",
       confirmPassword: "",
-      adminSecret: "",
     },
   });
 
@@ -37,7 +36,6 @@ export default function SignupPage() {
       email: data.email,
       phoneNumber: data.phoneNumber,
       password: data.password,
-      adminSecret: data.adminSecret || undefined,
     };
 
     signupMutation.mutate(payload, {
@@ -127,19 +125,6 @@ export default function SignupPage() {
               )}
             </div>
 
-            {/* Admin Secret */}
-            <div>
-              <Input
-                label="Secret Code"
-                type="password"
-                {...register("adminSecret")}
-              />
-              {errors.adminSecret && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.adminSecret.message}
-                </p>
-              )}
-            </div>
 
             {/* Submit */}
             <Button
