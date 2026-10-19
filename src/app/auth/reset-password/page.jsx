@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
@@ -73,10 +72,14 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
-      <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm">
-          <div className="mb-10">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-12">
+      <div className="w-full max-w-md">
+          <div className="mb-10 text-center flex flex-col items-center">
+            <img
+              src="/logo.jpeg"
+              alt="Blockvextrade Logo"
+              className="w-12 h-12 mb-3 object-contain rounded-md"
+            />
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
               Reset Password
             </h1>
@@ -123,19 +126,6 @@ export default function ResetPasswordPage() {
               </Link>
             </p>
           </form>
-        </div>
-      </div>
-
-      <div className="hidden lg:flex items-center justify-center w-1/2">
-        <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
-          <Image
-            src="/assets/auth-image.png"
-            alt="Reset password visual"
-            width={800}
-            height={800}
-            className="object-cover w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );

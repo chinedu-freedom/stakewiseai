@@ -3,7 +3,16 @@ import ConfigLayout from "./config-layout";
 
 
 export const metadata = {
-  title: "SatrixNow",
+  title: "Blockvextrade Admin",
+  description: "Blockvextrade Intelligent Staking & Investment Management Console",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" }
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {

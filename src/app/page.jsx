@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/schemas";
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePost } from "@/hooks/useApi";
@@ -63,6 +62,7 @@ export default function LoginPage() {
 
         if (accessToken) {
           // Set cookies with a stable duration
+          CookieManager.set("blockvextrade-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5);
           CookieManager.set("satrixnow-admin-token", accessToken, keepMeLoggedIn ? 1 : 0.5); 
           CookieManager.set("isAuthenticated", "true", keepMeLoggedIn ? 1 : 0.5);
           
@@ -87,15 +87,19 @@ export default function LoginPage() {
   const isLoading = loginMutation.isPending;
 
   return (
-    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
-      <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm">
-          <div className="mb-10">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-12">
+      <div className="w-full max-w-md">
+          <div className="mb-10 text-center flex flex-col items-center">
+            <img
+              src="/logo.jpeg"
+              alt="Blockvextrade Logo"
+              className="w-12 h-12 mb-3 object-contain rounded-md"
+            />
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
               Welcome back
             </h1>
             <p className="text-gray-500 text-sm">
-              Login to your account to continue
+              Login to Blockvextrade Admin Console
             </p>
           </div>
 
@@ -171,19 +175,6 @@ export default function LoginPage() {
               Sign up
             </Link>
           </p>
-        </div>
-      </div>
-
-      <div className="hidden lg:flex items-center justify-center w-1/2">
-        <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
-          <Image
-            src="/assets/auth-image.png"
-            alt="Login visual"
-            width={800}
-            height={800}
-            className="object-cover w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );

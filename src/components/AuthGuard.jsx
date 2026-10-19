@@ -10,7 +10,7 @@ export default function AuthGuard({ children }) {
 
   useEffect(() => {
     // Check for authentication
-    const token = CookieManager.get("satrixnow-admin-token");
+    const token = CookieManager.get("blockvextrade-admin-token") || CookieManager.get("satrixnow-admin-token");
     const isAuthenticated = CookieManager.get("isAuthenticated");
 
     if (!token || !isAuthenticated) {

@@ -6,7 +6,6 @@ import { forgotPasswordSchema } from "@/lib/schemas";
 import { usePost } from "@/hooks/useApi"; // ✅ new centralized hook
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -35,14 +34,17 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
-      {/* Left section (Form) */}
-      <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm">
-          <div className="mb-10">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-12">
+      <div className="w-full max-w-md">
+          <div className="mb-10 text-center flex flex-col items-center">
+            <img
+              src="/logo.jpeg"
+              alt="Blockvextrade Logo"
+              className="w-12 h-12 mb-3 object-contain rounded-md"
+            />
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Forgot Password?</h1>
             <p className="text-gray-500 text-sm">
-              Enter your registered email and we’ll send you a password reset link.
+              Enter your registered email and we’ll send you an OTP to reset your password.
             </p>
           </div>
 
@@ -73,20 +75,6 @@ export default function ForgotPasswordPage() {
               </Link>
             </p>
           </form>
-        </div>
-      </div>
-
-      {/* Right section (Image) */}
-      <div className="hidden lg:flex items-center justify-center w-1/2">
-        <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
-          <Image
-            src="/assets/auth-image.png"
-            alt="Forgot password visual"
-            width={800}
-            height={800}
-            className="object-cover w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );

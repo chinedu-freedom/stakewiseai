@@ -6,7 +6,6 @@ import { signupSchema } from "@/lib/schemas";
 import { usePost } from "@/hooks/useApi";
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -49,16 +48,19 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen justify-center flex flex-col md:flex-row bg-white">
-      {/* Left section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-12 overflow-y-auto">
-        <div className="w-full max-w-md">
-          <div className="mb-10">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-12">
+      <div className="w-full max-w-md">
+          <div className="mb-10 text-center flex flex-col items-center">
+            <img
+              src="/logo.jpeg"
+              alt="Blockvextrade Logo"
+              className="w-12 h-12 mb-3 object-contain rounded-md"
+            />
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
-              Sign up
+              Create Admin Account
             </h1>
             <p className="text-gray-500 text-sm">
-              Sign up for free and start growing your wealth today
+              Register an administrator account for Blockvextrade
             </p>
           </div>
 
@@ -158,20 +160,6 @@ export default function SignupPage() {
               Sign in
             </Link>
           </p>
-        </div>
-      </div>
-
-      {/* Right */}
-      <div className="hidden md:flex w-1/2 items-center justify-center">
-        <div className="w-[70%] h-[75%] overflow-hidden rounded-2xl shadow-md">
-          <Image
-            src="/assets/auth-image.png"
-            alt="Signup visual"
-            width={600}
-            height={600}
-            className="object-cover w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );

@@ -35,6 +35,7 @@ export default function Topbar({ isOpen, onToggle }) {
     logout(null, {
       onSuccess: () => {
         // Clear all authentication data
+        CookieManager.remove("blockvextrade-admin-token");
         CookieManager.remove("satrixnow-admin-token");
         CookieManager.remove("isAuthenticated");
         

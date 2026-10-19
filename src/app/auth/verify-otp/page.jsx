@@ -8,7 +8,6 @@ import { otpSchema } from "@/lib/schemas";
 import { usePost } from "@/hooks/useApi"; 
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -69,10 +68,13 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <div className="min-h-screen justify-center flex flex-col lg:flex-row bg-white">
-      {/* Left side (OTP Form) */}
-      <div className="flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm text-center">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-12">
+      <div className="w-full max-w-md text-center flex flex-col items-center">
+          <img
+            src="/logo.jpeg"
+            alt="Blockvextrade Logo"
+            className="w-12 h-12 mb-3 object-contain rounded-md"
+          />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify OTP</h2>
           <p className="text-sm text-gray-500 mb-8">
             Enter the 4-digit code sent to your email.
@@ -119,20 +121,6 @@ export default function VerifyOtpPage() {
               </button>
             </p>
           </form>
-        </div>
-      </div>
-
-      {/* Right side (Image) */}
-      <div className="hidden lg:flex items-center justify-center w-1/2">
-        <div className="w-[70%] h-[85%] overflow-hidden rounded-2xl shadow-md">
-          <Image
-            src="/assets/auth-image.png"
-            alt="OTP verification visual"
-            width={800}
-            height={800}
-            className="object-cover w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );
