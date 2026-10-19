@@ -5,7 +5,6 @@ export const dynamic = "force-dynamic";
 import { Suspense } from "react";
 import Tabs from "@/components/ui/tabs";
 import ManageAccount from "./tabs/manage-account";
-import ChangePassword from "./tabs/change-password";
 import ReferralSettings from "./tabs/referral-settings";
 import { useSearchParams } from "next/navigation";
 
@@ -13,7 +12,7 @@ function SettingsContent() {
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "manage-account";
 
-  const tabs = ["Manage Account", "Change Password", "Referral Settings"];
+  const tabs = ["Manage Account", "Referral Settings"];
 
   return (
     <div className="space-y-6">
@@ -24,7 +23,6 @@ function SettingsContent() {
 
       <div className="mt-4">
         {tab === "manage-account" && <ManageAccount />}
-        {tab === "change-password" && <ChangePassword />}
         {tab === "referral-settings" && <ReferralSettings />}
       </div>
     </div>

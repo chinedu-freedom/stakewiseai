@@ -143,14 +143,6 @@ export default function Topbar({ isOpen, onToggle }) {
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem>
-            <Link
-              href="/admin/settings?tab=change-password"
-              className="flex items-center w-full"
-            >
-              <KeyRound className="w-4 h-4 mr-2" /> Change Password
-            </Link>
-          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
