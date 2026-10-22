@@ -3,8 +3,12 @@
 import axios from "axios";
 import { CookieManager } from "@/utils/cookie-utils";
 
-// ✅ Use correct env variable with local dev fallback
-export const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001";
+// ✅ Use correct env variable with live production fallback
+export const API_URL =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://admin-api.blockvextrade.com"
+    : "http://localhost:5001");
 
 const axiosInstance = axios.create({
   baseURL: API_URL,

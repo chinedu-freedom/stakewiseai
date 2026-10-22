@@ -4,12 +4,13 @@ export const CookieManager = {
   set: (name, value, days = 7) => {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
     
-    // Set for the current subdomain (admin.blockvextrade.com)
-    // This is more reliable for admin panels where cross-subdomain access isn't needed.
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+    // Set for current origin (admin.blockvextrade.com)
+    const isSecure = typeof window !== "undefined" && window.location.protocol === "https:";
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax${isSecure ? "; Secure" : ""}`;
   },
 
   get: (name) => {
+    if (typeof document === "undefined") return undefined;
     const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
       const [key, value] = cookie.split("=");
       acc[key] = decodeURIComponent(value);
@@ -19,6 +20,8 @@ export const CookieManager = {
   },
 
   remove: (name) => {
-    document.cookie = `${name}=; expires=${new Date(0).toUTCString()}; path=/`;
+    if (typeof document === "undefined") return;
+    const isSecure = typeof window !== "undefined" && window.location.protocol === "https:";
+    document.cookie = `${name}=; expires=${new Date(0).toUTCString()}; path=/${isSecure ? "; Secure" : ""}`;
   },
 };
